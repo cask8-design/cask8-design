@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Sombra sob a Cidade</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #111;
+      color: white;
+      font-family: Georgia, serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .book {
+      width: 90%;
+      max-width: 800px;
+      min-height: 600px;
+      background: #181818;
+      border: 1px solid #333;
+      border-radius: 12px;
+      box-shadow: 0 0 40px #000;
+      padding: 40px;
+      position: relative;
+    }
+
+    .cover {
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .cover h1 {
+      font-size: 42px;
+      margin-bottom: 15px;
+    }
+
+    .cover p {
+      color: #aaa;
+      font-size: 18px;
+    }
+
+    .page {
+      display: none;
+      min-height: 480px;
+      line-height: 1.8;
+      font-size: 18px;
+      white-space: pre-line;
+    }
+
+    .page.active {
+      display: block;
+      animation: virar 0.4s;
+    }
+
+    @keyframes virar {
+      from {
+        opacity: 0;
+        transform: rotateY(-20deg);
+      }
+      to {
+        opacity: 1;
+        transform: rotateY(0);
+      }
+    }
+
+    .chapter-title {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      gap: 10px;
+    }
+
+    button {
+      background: #252525;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 8px;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    .number {
+      text-align: center;
+      color: #777;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .book {
+        width: 95%;
+        padding: 25px;
+        min-height: 550px;
+      }
+
+      .cover h1 {
+        font-size: 32px;
+      }
+
+      .page {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="book">
+
+    <section class="cover page active">
+      <h1>A Sombra sob a Cidade</h1>
+      <p>Uma história de mistério, medo e coisas que não deveriam existir.</p>
+      <button onclick="nextPage()">Começar a leitura</button>
+    </section>
+
+    <section class="page">
+      <h2 class="chapter-title">Capítulo 1 — O Monstro no Telhado</h2>
+
+      A noite estava silenciosa.
+
+      Algumas pessoas têm medo do escuro.
+
+      Eu tinha medo do que existia dentro dele.
+
+      Cauã estava em seu quarto, olhando pela janela. A rua estava completamente parada, iluminada apenas pela fraca luz dos postes.
+
+      Foi então que ele percebeu algo no telhado da casa em frente.
+
+      Uma criatura.
+
+      Alta. Magra. Com braços compridos demais para serem humanos.
+
+      Ela estava completamente imóvel.
+
+      Apenas olhando para ele.
+
+      Cauã sentiu o corpo inteiro ficar pesado.
+
+      Seus olhos estavam completamente negros.
+
+      — ...De novo?
+
+      Ele não sabia por que tinha dito aquilo.
+
+      Mas, de alguma forma, aquela não era a primeira vez que via aquela criatura.
+    </section>
+
+    <section class="page">
+
+      Cauã tentou desviar o olhar.
+
+      — É só um sonho...
+
+      Quando olhou novamente para o telhado, a criatura continuava lá.
+
+      Imóvel.
+
+      Observando.
+
+      TOC.
+
+      Cauã congelou.
+
+      TOC.
+
+      O som vinha da janela.
+
+      TOC.
+
+      Ele lentamente se aproximou.
+
+      — Quem está aí?
+
+      Silêncio.
+
+      Cauã abriu a cortina.
+
+      Não havia ninguém do lado de fora.
+
+      Então...
+
+      TOC.
+
+      O som veio novamente.
+
+      Mas dessa vez estava do outro lado do vidro.
+    </section>
+
+    <section class="page">
+
+      Cauã levantou os olhos.
+
+      A criatura estava ali.
+
+      Do outro lado da janela.
+
+      Encarando-o.
+
+      E, pela primeira vez, ela sorriu.
+
+      FIM DO CAPÍTULO 1
+    </section>
+
+    <div class="controls">
+      <button onclick="previousPage()">← Voltar</button>
+      <button onclick="nextPage()">Avançar →</button>
+    </div>
+
+    <div class="number">
+      Página <span id="pageNumber">1</span>
+    </div>
+
+  </div>
+
+  <script>
+    const pages = document.querySelectorAll(".page");
+    let currentPage = 0;
+
+    function showPage() {
+      pages.forEach(page => page.classList.remove("active"));
+      pages[currentPage].classList.add("active");
+
+      document.getElementById("pageNumber").textContent =
+        currentPage + 1;
+    }
+
+    function nextPage() {
+      if (currentPage < pages.length - 1) {
+        currentPage++;
+        showPage();
+      }
+    }
+
+    function previousPage() {
+      if (currentPage > 0) {
+        currentPage--;
+        showPage();
+      }
+    }
+  </script>
+
+</body>
+</html>
