@@ -125,6 +125,47 @@ h1 {
   font-size: 70px;
   margin-bottom: 15px;
 }
+  .menu-capitulos {
+    width: 100%;
+    max-width: 700px;
+    margin: 15px auto;
+    text-align: center;
+}
+
+.menu-capitulos > button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #222;
+    color: white;
+    font-size: 18px;
+}
+
+.lista-capitulos {
+    display: none;
+    margin-top: 8px;
+    background: #151515;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.lista-capitulos button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 8px;
+    background: #2b2b2b;
+    color: white;
+    text-align: left;
+    font-size: 15px;
+}
+
+.lista-capitulos button:active {
+    background: #444;
+}
 
 .chapter {
   text-align: center;
@@ -257,7 +298,19 @@ button:disabled {
 
 <h1>📖 Uma Sombra sob a Cidade</h1>
 
-<div class="book">
+<div class="menu-capitulos">
+    <button onclick="abrirMenu()">☰ Capítulos</button>
+
+    <div id="listaCapitulos" class="lista-capitulos">
+        <button onclick="irParaPagina(0)">📖 Capa</button>
+        <button onclick="irParaPagina(1)">1 — O Monstro no Telhado</button>
+        <button onclick="irParaPagina(2)">2 — Os Olhos</button>
+        <button onclick="irParaPagina(3)">3 — O Silêncio</button>
+        <button onclick="irParaPagina(4)">4 — A Voz</button>
+        <button onclick="irParaPagina(5)">5 — Continua...</button>
+    </div>
+</div>
+  <div class="book">
 
   <!-- CAPA -->
   <section class="page active cover">
