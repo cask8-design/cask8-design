@@ -55,7 +55,20 @@ h1 {
 .page.active {
   display: block;
 }
+.page.active {
+    animation: virarPagina 0.5s ease;
+}
 
+@keyframes virarPagina {
+    from {
+        opacity: 0;
+        transform: rotateY(-15deg);
+    }
+    to {
+        opacity: 1;
+        transform: rotateY(0);
+    }
+}
 @keyframes abrir {
   from {
     opacity: 0;
