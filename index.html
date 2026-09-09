@@ -644,7 +644,23 @@ document.addEventListener("keydown", function(event) {
   }
 
 });
+function abrirMenu() {
+    const lista = document.getElementById("listaCapitulos");
 
+    if (lista.style.display === "block") {
+        lista.style.display = "none";
+    } else {
+        lista.style.display = "block";
+    }
+}
+
+function irParaPagina(numero) {
+    paginaAtual = numero;
+    mostrarPagina();
+
+    const lista = document.getElementById("listaCapitulos");
+    lista.style.display = "none";
+}
 mostrarPagina();
 
 </script>
