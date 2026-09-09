@@ -1,267 +1,571 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A Sombra sob a Cidade</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<title>Uma Sombra sob a Cidade</title>
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #111;
-      color: white;
-      font-family: Georgia, serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    .book {
-      width: 90%;
-      max-width: 800px;
-      min-height: 600px;
-      background: #181818;
-      border: 1px solid #333;
-      border-radius: 12px;
-      box-shadow: 0 0 40px #000;
-      padding: 40px;
-      position: relative;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, #222 0%, #090909 55%, #000 100%);
+  color: white;
+  font-family: Georgia, "Times New Roman", serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 12px;
+}
 
-    .cover {
-      min-height: 500px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
+h1 {
+  text-align: center;
+  margin: 5px 0 20px;
+  font-size: 26px;
+}
 
-    .cover h1 {
-      font-size: 42px;
-      margin-bottom: 15px;
-    }
+.book {
+  width: min(900px, 100%);
+  min-height: 570px;
+  position: relative;
+  perspective: 1600px;
+}
 
-    .cover p {
-      color: #aaa;
-      font-size: 18px;
-    }
+.page {
+  display: none;
+  width: 100%;
+  min-height: 570px;
+  background: #f2ead8;
+  color: #211b16;
+  border-radius: 8px;
+  padding: 45px 35px;
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.7),
+    inset 0 0 30px rgba(80,50,20,.15);
+  overflow-y: auto;
+  animation: abrir .45s ease;
+}
 
-    .page {
-      display: none;
-      min-height: 480px;
-      line-height: 1.8;
-      font-size: 18px;
-      white-space: pre-line;
-    }
+.page.active {
+  display: block;
+}
 
-    .page.active {
-      display: block;
-      animation: virar 0.4s;
-    }
+@keyframes abrir {
+  from {
+    opacity: 0;
+    transform: rotateY(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0);
+  }
+}
 
-    @keyframes virar {
-      from {
-        opacity: 0;
-        transform: rotateY(-20deg);
-      }
-      to {
-        opacity: 1;
-        transform: rotateY(0);
-      }
-    }
+.cover {
+  min-height: 570px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background:
+    linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.7)),
+    radial-gradient(circle at center, #353535, #080808 75%);
+  color: white;
+  border: 2px solid #555;
+}
 
-    .chapter-title {
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 28px;
-    }
+.cover h2 {
+  font-size: 38px;
+  margin: 10px 0;
+  letter-spacing: 2px;
+}
 
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 25px;
-      gap: 10px;
-    }
+.cover p {
+  font-size: 17px;
+  color: #ccc;
+}
 
-    button {
-      background: #252525;
-      color: white;
-      border: 1px solid #555;
-      border-radius: 8px;
-      padding: 12px 20px;
-      cursor: pointer;
-      font-size: 16px;
-    }
+.symbol {
+  font-size: 70px;
+  margin-bottom: 15px;
+}
 
-    button:hover {
-      background: #333;
-    }
+.chapter {
+  text-align: center;
+  margin-bottom: 35px;
+}
 
-    .number {
-      text-align: center;
-      color: #777;
-      margin-top: 15px;
-    }
+.chapter small {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #777;
+}
 
-    @media (max-width: 600px) {
-      .book {
-        width: 95%;
-        padding: 25px;
-        min-height: 550px;
-      }
+.chapter h2 {
+  font-size: 32px;
+  margin: 12px 0;
+}
 
-      .cover h1 {
-        font-size: 32px;
-      }
+.page h3 {
+  font-size: 24px;
+}
 
-      .page {
-        font-size: 16px;
-      }
-    }
-  </style>
+.page p {
+  font-size: 18px;
+  line-height: 1.75;
+  text-align: justify;
+}
+
+.quote {
+  border-left: 4px solid #555;
+  padding-left: 18px;
+  font-style: italic;
+  color: #555;
+  margin: 30px 0;
+}
+
+.number {
+  text-align: center !important;
+  color: #888;
+  margin-top: 35px;
+}
+
+.controls {
+  width: min(900px, 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 13px 20px;
+  background: #292929;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #444;
+}
+
+button:disabled {
+  opacity: .35;
+}
+
+#contador {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.dica {
+  color: #777;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+
+  body {
+    padding: 12px 8px;
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+
+  .book {
+    min-height: 540px;
+  }
+
+  .page {
+    min-height: 540px;
+    padding: 30px 22px;
+  }
+
+  .cover {
+    min-height: 540px;
+  }
+
+  .cover h2 {
+    font-size: 29px;
+  }
+
+  .symbol {
+    font-size: 55px;
+  }
+
+  .chapter h2 {
+    font-size: 26px;
+  }
+
+  .page p {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  button {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="book">
+<h1>📖 Uma Sombra sob a Cidade</h1>
 
-    <section class="cover page active">
-      <h1>A Sombra sob a Cidade</h1>
-      <p>Uma história de mistério, medo e coisas que não deveriam existir.</p>
-      <button onclick="nextPage()">Começar a leitura</button>
-    </section>
+<div class="book">
 
-    <section class="page">
-      <h2 class="chapter-title">Capítulo 1 — O Monstro no Telhado</h2>
+  <!-- CAPA -->
+  <section class="page active cover">
+    <div class="symbol">🌑</div>
 
-      A noite estava silenciosa.
+    <h2>Uma Sombra<br>sob a Cidade</h2>
 
-      Algumas pessoas têm medo do escuro.
+    <p>Um livro interativo</p>
 
-      Eu tinha medo do que existia dentro dele.
+    <p>Capítulo 1 — O Monstro no Telhado</p>
+  </section>
 
-      Cauã estava em seu quarto, olhando pela janela. A rua estava completamente parada, iluminada apenas pela fraca luz dos postes.
 
-      Foi então que ele percebeu algo no telhado da casa em frente.
+  <!-- PÁGINA 1 -->
+  <section class="page">
 
-      Uma criatura.
-
-      Alta. Magra. Com braços compridos demais para serem humanos.
-
-      Ela estava completamente imóvel.
-
-      Apenas olhando para ele.
-
-      Cauã sentiu o corpo inteiro ficar pesado.
-
-      Seus olhos estavam completamente negros.
-
-      — ...De novo?
-
-      Ele não sabia por que tinha dito aquilo.
-
-      Mas, de alguma forma, aquela não era a primeira vez que via aquela criatura.
-    </section>
-
-    <section class="page">
-
-      Cauã tentou desviar o olhar.
-
-      — É só um sonho...
-
-      Quando olhou novamente para o telhado, a criatura continuava lá.
-
-      Imóvel.
-
-      Observando.
-
-      TOC.
-
-      Cauã congelou.
-
-      TOC.
-
-      O som vinha da janela.
-
-      TOC.
-
-      Ele lentamente se aproximou.
-
-      — Quem está aí?
-
-      Silêncio.
-
-      Cauã abriu a cortina.
-
-      Não havia ninguém do lado de fora.
-
-      Então...
-
-      TOC.
-
-      O som veio novamente.
-
-      Mas dessa vez estava do outro lado do vidro.
-    </section>
-
-    <section class="page">
-
-      Cauã levantou os olhos.
-
-      A criatura estava ali.
-
-      Do outro lado da janela.
-
-      Encarando-o.
-
-      E, pela primeira vez, ela sorriu.
-
-      FIM DO CAPÍTULO 1
-    </section>
-
-    <div class="controls">
-      <button onclick="previousPage()">← Voltar</button>
-      <button onclick="nextPage()">Avançar →</button>
+    <div class="chapter">
+      <small>Capítulo 1</small>
+      <h2>O Monstro no Telhado</h2>
     </div>
 
-    <div class="number">
-      Página <span id="pageNumber">1</span>
+    <p>
+      A noite parecia normal.
+    </p>
+
+    <p>
+      As ruas estavam silenciosas e poucas luzes permaneciam acesas.
+      O vento passava pelas casas, fazendo as árvores balançarem
+      lentamente.
+    </p>
+
+    <p>
+      Eu estava olhando pela janela quando alguma coisa chamou minha
+      atenção.
+    </p>
+
+    <p>
+      No telhado da casa em frente havia uma silhueta.
+    </p>
+
+    <p class="quote">
+      Alta. Imóvel. Observando.
+    </p>
+
+    <p class="number">1</p>
+  </section>
+
+
+  <!-- PÁGINA 2 -->
+  <section class="page">
+
+    <h3>Os olhos</h3>
+
+    <p>
+      No começo pensei que fosse apenas uma pessoa.
+    </p>
+
+    <p>
+      Mas então ela levantou lentamente a cabeça.
+    </p>
+
+    <p>
+      Foi quando percebi seus olhos.
+    </p>
+
+    <p>
+      Eram completamente negros.
+    </p>
+
+    <p>
+      Não havia brilho. Não havia reflexo. Era como se dois buracos
+      tivessem sido abertos naquela cabeça.
+    </p>
+
+    <p>
+      Meu corpo congelou.
+    </p>
+
+    <p>
+      Eu queria me afastar da janela, mas não conseguia.
+    </p>
+
+    <p class="quote">
+      Ela estava olhando diretamente para mim.
+    </p>
+
+    <p class="number">2</p>
+  </section>
+
+
+  <!-- PÁGINA 3 -->
+  <section class="page">
+
+    <h3>O silêncio</h3>
+
+    <p>
+      Por alguns segundos, nenhum dos dois se moveu.
+    </p>
+
+    <p>
+      O vento parou.
+    </p>
+
+    <p>
+      Os sons da rua desapareceram.
+    </p>
+
+    <p>
+      Até mesmo os cachorros que costumavam latir durante a madrugada
+      ficaram em silêncio.
+    </p>
+
+    <p>
+      Então a criatura inclinou a cabeça.
+    </p>
+
+    <p>
+      Não como uma pessoa faria.
+    </p>
+
+    <p>
+      Era um movimento lento e estranho, quase impossível para um
+      corpo humano.
+    </p>
+
+    <p>
+      Dei um passo para trás.
+    </p>
+
+    <p class="number">3</p>
+  </section>
+
+
+  <!-- PÁGINA 4 -->
+  <section class="page">
+
+    <h3>O impossível</h3>
+
+    <p>
+      Quando olhei novamente para o telhado, ela havia desaparecido.
+    </p>
+
+    <p>
+      Corri até a janela.
+    </p>
+
+    <p>
+      Nada.
+    </p>
+
+    <p>
+      Apenas o telhado vazio e a escuridão da noite.
+    </p>
+
+    <p>
+      Talvez tivesse sido minha imaginação.
+    </p>
+
+    <p>
+      Talvez eu estivesse cansado.
+    </p>
+
+    <p>
+      Mas havia uma coisa que não fazia sentido.
+    </p>
+
+    <p class="quote">
+      Eu tinha certeza de que a criatura estava ali.
+    </p>
+
+    <p class="number">4</p>
+  </section>
+
+
+  <!-- PÁGINA 5 -->
+  <section class="page">
+
+    <h3>O despertar</h3>
+
+    <p>
+      Naquela noite tentei dormir.
+    </p>
+
+    <p>
+      Não consegui.
+    </p>
+
+    <p>
+      Toda vez que fechava os olhos, aqueles dois olhos negros
+      apareciam novamente.
+    </p>
+
+    <p>
+      Até que, pouco antes do amanhecer, senti alguma coisa diferente.
+    </p>
+
+    <p>
+      Um calor estranho percorreu meu corpo.
+    </p>
+
+    <p>
+      Meu coração acelerou.
+    </p>
+
+    <p>
+      E então ouvi uma voz dentro da minha cabeça.
+    </p>
+
+    <p class="quote">
+      "Você finalmente me viu."
+    </p>
+
+    <p class="number">5</p>
+  </section>
+
+
+  <!-- FINAL -->
+  <section class="page">
+
+    <div class="chapter">
+      <small>Fim do capítulo</small>
+      <h2>Continua...</h2>
     </div>
 
-  </div>
+    <p>
+      O que era aquela criatura?
+    </p>
 
-  <script>
-    const pages = document.querySelectorAll(".page");
-    let currentPage = 0;
+    <p>
+      Por que ela estava observando?
+    </p>
 
-    function showPage() {
-      pages.forEach(page => page.classList.remove("active"));
-      pages[currentPage].classList.add("active");
+    <p>
+      E, principalmente...
+    </p>
 
-      document.getElementById("pageNumber").textContent =
-        currentPage + 1;
-    }
+    <p class="quote">
+      O que estava despertando dentro de mim?
+    </p>
 
-    function nextPage() {
-      if (currentPage < pages.length - 1) {
-        currentPage++;
-        showPage();
-      }
-    }
+    <p style="text-align:center;font-size:30px;">
+      🌑
+    </p>
 
-    function previousPage() {
-      if (currentPage > 0) {
-        currentPage--;
-        showPage();
-      }
-    }
-  </script>
+    <p class="number">6</p>
+  </section>
+
+</div>
+
+<div class="controls">
+
+  <button id="anterior" onclick="paginaAnterior()">
+    ← Anterior
+  </button>
+
+  <span id="contador">Capa</span>
+
+  <button id="proximo" onclick="proximaPagina()">
+    Próxima →
+  </button>
+
+</div>
+
+<div class="dica">
+  No celular, toque nos botões para folhear o livro.
+</div>
+
+<script>
+
+const paginas = document.querySelectorAll(".page");
+
+let paginaAtual = 0;
+
+const anterior = document.getElementById("anterior");
+const proximo = document.getElementById("proximo");
+const contador = document.getElementById("contador");
+
+function mostrarPagina() {
+
+  paginas.forEach((pagina, indice) => {
+    pagina.classList.toggle(
+      "active",
+      indice === paginaAtual
+    );
+  });
+
+  anterior.disabled = paginaAtual === 0;
+
+  proximo.disabled =
+    paginaAtual === paginas.length - 1;
+
+  if (paginaAtual === 0) {
+    contador.textContent = "Capa";
+  } else {
+    contador.textContent =
+      "Página " + paginaAtual + " de " + (paginas.length - 1);
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+function proximaPagina() {
+
+  if (paginaAtual < paginas.length - 1) {
+    paginaAtual++;
+    mostrarPagina();
+  }
+
+}
+
+function paginaAnterior() {
+
+  if (paginaAtual > 0) {
+    paginaAtual--;
+    mostrarPagina();
+  }
+
+}
+
+document.addEventListener("keydown", function(event) {
+
+  if (event.key === "ArrowRight") {
+    proximaPagina();
+  }
+
+  if (event.key === "ArrowLeft") {
+    paginaAnterior();
+  }
+
+});
+
+mostrarPagina();
+
+</script>
 
 </body>
 </html>
