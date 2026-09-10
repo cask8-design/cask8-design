@@ -4,227 +4,257 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Minha Biblioteca</title>
+
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
 body{
-  margin:0;min-height:100vh;padding:18px 10px;
-  background:radial-gradient(circle at top,#252525 0%,#090909 55%,#000 100%);
-  color:#fff;font-family:Georgia,"Times New Roman",serif;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#111;
+  color:#fff;
 }
-h1{text-align:center;font-size:27px;margin:8px 0 24px}
-button{
-  border:0;border-radius:10px;padding:12px 16px;
-  background:#292929;color:#fff;font-size:15px;cursor:pointer
+
+header{
+  text-align:center;
+  padding:25px 15px;
+  background:#1b1b1b;
 }
-button:hover{background:#444}
-#biblioteca{width:min(1000px,100%);margin:auto}
-.subtitulo{text-align:center;color:#aaa;margin-top:-14px;margin-bottom:24px}
-.grade{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:16px
+
+header h1{
+  margin:0 0 8px;
 }
+
+header p{
+  margin:0;
+  color:#bbb;
+}
+
+main{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
+
+#biblioteca{
+  display:block;
+}
+
+.grade-livros{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
 .livro{
-  background:#171717;border:1px solid #333;border-radius:14px;
-  padding:12px;box-shadow:0 10px 25px #0008
+  background:#1d1d1d;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 4px 15px #000;
 }
+
 .capa-livro{
-  height:210px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;font-size:50px;
-  background:linear-gradient(145deg,#343434,#090909);
-  border:1px solid #555;overflow:hidden
+  width:100%;
+  height:300px;
+  overflow:hidden;
+  border-radius:8px;
+  background:#333;
 }
-.capa-livro img{width:100%;height:100%;object-fit:cover}
-.livro h3{font-size:18px;margin:12px 0 6px}
-.livro p{color:#aaa;font-size:14px;line-height:1.4;min-height:40px}
-.livro button{width:100%}
-#leitor{display:none}
+
+.capa-livro img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.livro h3{
+  margin:15px 0 8px;
+}
+
+.livro p{
+  color:#bbb;
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:12px 18px;
+  background:#fff;
+  color:#111;
+  font-weight:bold;
+  cursor:pointer;
+  margin:5px;
+}
+
+button:hover{
+  opacity:.85;
+}
+
+#leitor{
+  display:none;
+}
+
 .topo-leitor{
-  width:min(900px,100%);margin:0 auto 12px;
-  display:flex;justify-content:space-between;align-items:center;gap:8px
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
 }
-.topo-leitor h2{margin:0;font-size:20px}
-.menu-capitulos{width:min(700px,100%);margin:10px auto 15px}
-.menu-capitulos>button{width:100%;font-size:17px}
-.lista-capitulos{
-  display:none;margin-top:8px;background:#151515;border-radius:10px;padding:8px
+
+#pagina{
+  min-height:500px;
+  background:#f5f5f5;
+  color:#111;
+  border-radius:12px;
+  padding:35px 25px;
+  font-size:19px;
+  line-height:1.7;
 }
-.lista-capitulos button{
-  display:block;width:100%;margin:4px 0;text-align:left;background:#2b2b2b
+
+.navegacao{
+  text-align:center;
+  margin-top:20px;
 }
-.book{
-  width:min(900px,100%);min-height:570px;margin:auto;
-  position:relative;perspective:1600px
+
+#numeroPagina{
+  display:inline-block;
+  margin:10px;
+  color:#bbb;
 }
-.page{
-  display:none;width:100%;min-height:570px;
-  background:#f2ead8;color:#211b16;border-radius:8px;
-  padding:45px 35px;box-shadow:0 15px 40px #000b,inset 0 0 30px #50321426;
-  overflow-y:auto
+
+#capitulos{
+  display:none;
+  background:#222;
+  border-radius:10px;
+  padding:15px;
+  margin-bottom:20px;
 }
-.page.active{display:block;animation:virar .45s ease}
-@keyframes virar{
- from{opacity:0;transform:translateX(25px)}
- 50%{opacity:.8;transform:translateX(8px)}
- to{opacity:1;transform:translateX(0)}
+
+.capitulo{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:#333;
+  color:#fff;
+  margin:8px 0;
 }
-.cover{
-  min-height:570px;display:none;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;
-  background:linear-gradient(#0004,#000b),radial-gradient(circle,#353535,#080808 75%);
-  color:#fff;border:2px solid #555
+
+.capa-pagina{
+  text-align:center;
 }
-.page.active.cover{display:flex}
-.cover h2{font-size:38px;margin:10px 0;letter-spacing:2px}
-.cover p{font-size:17px;color:#ccc}
-.symbol{font-size:70px;margin-bottom:15px}
-.chapter{text-align:center;margin-bottom:35px}
-.chapter small{text-transform:uppercase;letter-spacing:3px;color:#777}
-.chapter h2{font-size:32px;margin:12px 0}
-.page h3{font-size:24px}
-.page p{font-size:18px;line-height:1.75;text-align:justify}
-.quote{border-left:4px solid #555;padding-left:18px;font-style:italic;color:#555;margin:30px 0}
-.number{text-align:center!important;color:#888;margin-top:35px}
-.controls{
-  width:min(900px,100%);margin:18px auto 0;
-  display:flex;justify-content:space-between;align-items:center;gap:10px
+
+.capa-pagina h2{
+  font-size:30px;
 }
-#contador{color:#aaa;font-size:14px}
-.dica{color:#777;font-size:13px;text-align:center;margin-top:12px}
+
 @media(max-width:600px){
- body{padding:12px 8px}
- h1{font-size:22px}
- .capa-livro{height:190px}
- .page{min-height:540px;padding:30px 22px}
- .cover{min-height:540px}
- .cover h2{font-size:29px}
- .symbol{font-size:55px}
- .chapter h2{font-size:26px}
- .page p{font-size:16px;line-height:1.65}
- button{padding:12px 14px;font-size:14px}
+  main{
+    padding:12px;
+  }
+
+  .capa-livro{
+    height:350px;
+  }
+
+  #pagina{
+    min-height:450px;
+    padding:25px 18px;
+    font-size:17px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<section id="biblioteca">
+<header>
   <h1>📚 Minha Biblioteca</h1>
-  <p class="subtitulo">Escolha um livro para começar a leitura</p>
-  <div id="gradeLivros" class="grade"></div>
+  <p>Escolha um livro para começar a leitura</p>
+</header>
+
+<main>
+
+<section id="biblioteca">
+  <div class="grade-livros" id="gradeLivros"></div>
 </section>
 
 <section id="leitor">
+
   <div class="topo-leitor">
     <button onclick="voltarBiblioteca()">← Biblioteca</button>
-    <h2 id="tituloLeitor">Livro</h2>
+
+    <h2 id="tituloLivro">Livro</h2>
+
+    <button onclick="mostrarCapitulos()">☰ Capítulos</button>
   </div>
 
-  <div class="menu-capitulos">
-    <button onclick="abrirMenu()">☰ Capítulos</button>
-    <div id="listaCapitulos" class="lista-capitulos"></div>
+  <div id="capitulos"></div>
+
+  <div id="pagina"></div>
+
+  <div class="navegacao">
+    <button onclick="paginaAnterior()">← Anterior</button>
+    <span id="numeroPagina">Página 1</span>
+    <button onclick="proximaPagina()">Próxima →</button>
   </div>
 
-  <div id="paginasLivro" class="book"></div>
-
-  <div class="controls">
-    <button id="anterior" onclick="paginaAnterior()">← Anterior</button>
-    <span id="contador">Capa</span>
-    <button id="proximo" onclick="proximaPagina()">Próxima →</button>
-  </div>
-
-  <div class="dica">No celular, toque nos botões para folhear o livro.</div>
 </section>
 
+</main>
+
 <script>
-/*
-  PARA ADICIONAR LIVROS:
-  copie um objeto dentro da lista "livros" e altere:
-  id, titulo, descricao, capa e paginas.
-  Depois podemos ligar essa lista ao Supabase.
-*/
-const livros = [
+var livros = [
   {
     id: 1,
     titulo: "Uma Sombra sob a Cidade",
     descricao: "Uma história de mistério, terror e algo despertando.",
     capa: '<img src="Screenshot_20260909-190353~3.jpg" alt="Capa de Uma Sombra sob a Cidade">',
-    paginas: [
+    capitulos: [
       {
-        tipo:"capa",
-        html:`<div class="symbol">🌑</div>
-              <h2>Uma Sombra<br>sob a Cidade</h2>
-              <p>Um livro interativo</p>
-              <p>Capítulo 1 — O Monstro no Telhado</p>`
-      },
-      {
-        titulo:"O Monstro no Telhado",
-        capitulo:"Capítulo 1",
-        html:`<p>A noite parecia normal.</p>
-        <p>As ruas estavam silenciosas e poucas luzes permaneciam acesas.
-        O vento passava pelas casas, fazendo as árvores balançarem lentamente.</p>
-        <p>Eu estava olhando pela janela quando alguma coisa chamou minha atenção.</p>
-        <p>No telhado da casa em frente havia uma silhueta.</p>
-        <p class="quote">Alta. Imóvel. Observando.</p>`
-      },
-      {
-        titulo:"Os olhos",
-        html:`<p>No começo pensei que fosse apenas uma pessoa.</p>
-        <p>Mas então ela levantou lentamente a cabeça.</p>
-        <p>Foi quando percebi seus olhos.</p>
-        <p>Eram completamente negros.</p>
-        <p>Não havia brilho. Não havia reflexo. Era como se dois buracos
-        tivessem sido abertos naquela cabeça.</p>
-        <p>Meu corpo congelou.</p>
-        <p>Eu queria me afastar da janela, mas não conseguia.</p>
-        <p class="quote">Ela estava olhando diretamente para mim.</p>`
-      },
-      {
-        titulo:"O silêncio",
-        html:`<p>Por alguns segundos, nenhum dos dois se moveu.</p>
-        <p>O vento parou.</p>
-        <p>Os sons da rua desapareceram.</p>
-        <p>Até mesmo os cachorros que costumavam latir durante a madrugada
-        ficaram em silêncio.</p>
-        <p>Então a criatura inclinou a cabeça.</p>
-        <p>Não como uma pessoa faria.</p>
-        <p>Era um movimento lento e estranho, quase impossível para um corpo humano.</p>
-        <p>Dei um passo para trás.</p>`
-      },
-      {
-        titulo:"O impossível",
-        html:`<p>Quando olhei novamente para o telhado, ela havia desaparecido.</p>
-        <p>Corri até a janela.</p>
-        <p>Nada.</p>
-        <p>Apenas o telhado vazio e a escuridão da noite.</p>
-        <p>Talvez tivesse sido minha imaginação.</p>
-        <p>Talvez eu estivesse cansado.</p>
-        <p>Mas havia uma coisa que não fazia sentido.</p>
-        <p class="quote">Eu tinha certeza de que a criatura estava ali.</p>`
-      },
-      {
-        titulo:"O despertar",
-        html:`<p>Naquela noite tentei dormir.</p>
-        <p>Não consegui.</p>
-        <p>Toda vez que fechava os olhos, aqueles dois olhos negros apareciam novamente.</p>
-        <p>Até que, pouco antes do amanhecer, senti alguma coisa diferente.</p>
-        <p>Um calor estranho percorreu meu corpo.</p>
-        <p>Meu coração acelerou.</p>
-        <p>E então ouvi uma voz dentro da minha cabeça.</p>
-        <p class="quote">"Você finalmente me viu."</p>`
-      },
-      {
-        titulo:"Continua...",
-        fim:true,
-        html:`<div class="chapter">
-          <small>Fim do capítulo</small>
-          <h2>Continua...</h2>
-        </div>
-        <p>O que era aquela criatura?</p>
-        <p>Por que ela estava observando?</p>
-        <p>E, principalmente...</p>
-        <p class="quote">O que estava despertando dentro de mim?</p>
-        <p style="text-align:center;font-size:30px">🌑</p>
+        numero: 1,
+        titulo: "O Monstro no Telhado",
+        paginas: [
+          {
+            titulo: "O Monstro no Telhado",
+            texto: `
+              <div class="capa-pagina">
+                <h2>O Monstro no Telhado</h2>
+                <p>Uma presença desconhecida observa a cidade durante a noite.</p>
+              </div>
+            `
+          },
+          {
+            titulo: "A Noite",
+            texto: `
+              <h2>A Noite</h2>
+              <p>
+                A cidade parecia normal naquela noite. As ruas estavam
+                silenciosas e poucas pessoas ainda estavam acordadas.
+              </p>
+              <p>
+                Mas havia algo diferente no ar. Algo que ninguém conseguia
+                explicar.
+              </p>
+            `
+          },
+          {
+            titulo: "O Olhar",
+            texto: `
+              <h2>O Olhar</h2>
+              <p>
+                Do outro lado da rua, sobre um telhado, uma criatura observava.
+              </p>
+              <p>
+                Seus olhos completamente negros pareciam atravessar a escuridão.
+              </p>
+            `
+          }
+        ]
       }
     ]
   },
@@ -232,148 +262,217 @@ const livros = [
   {
     id: 2,
     titulo: "Novo livro",
-    descricao: "Espaço reservado para o próximo livro.",
-    capa: "📕",
-    paginas: [
-      {
-        tipo:"capa",
-        html:`<div class="symbol">📕</div>
-              <h2>Novo livro</h2>
-              <p>Em breve...</p>`
-      }
-    ]
+    descricao: "Adicione uma nova história à sua biblioteca.",
+    capa: `
+      <div style="
+        height:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:70px;
+      ">📖</div>
+    `,
+    capitulos: []
   }
 ];
 
-let livroAtual = null;
-let paginas = [];
-let paginaAtual = 0;
-
-const biblioteca = document.getElementById("biblioteca");
-const leitor = document.getElementById("leitor");
-const gradeLivros = document.getElementById("gradeLivros");
-const paginasLivro = document.getElementById("paginasLivro");
-const listaCapitulos = document.getElementById("listaCapitulos");
-const tituloLeitor = document.getElementById("tituloLeitor");
-const anterior = document.getElementById("anterior");
-const proximo = document.getElementById("proximo");
-const contador = document.getElementById("contador");
+var livroAtual = null;
+var capituloAtual = 0;
+var paginaAtual = 0;
 
 function mostrarBiblioteca(){
-  gradeLivros.innerHTML = "";
 
-  livros.forEach(livro => {
-    const card = document.createElement("div");
+  var grade = document.getElementById("gradeLivros");
+
+  grade.innerHTML = "";
+
+  livros.forEach(function(livro){
+
+    var card = document.createElement("div");
+
     card.className = "livro";
 
-    card.innerHTML = `
-      <div class="capa-livro">${livro.capa}</div>
-      <h3>${livro.titulo}</h3>
-      <p>${livro.descricao}</p>
-      <button onclick="abrirLivro(${livro.id})">▶ Ler livro</button>
-    `;
+    card.innerHTML =
+      '<div class="capa-livro">' +
+        livro.capa +
+      '</div>' +
 
-    gradeLivros.appendChild(card);
+      '<h3>' +
+        livro.titulo +
+      '</h3>' +
+
+      '<p>' +
+        livro.descricao +
+      '</p>' +
+
+      '<button onclick="abrirLivro(' +
+        livro.id +
+      ')">▶ Ler livro</button>';
+
+    grade.appendChild(card);
+
   });
 }
 
 function abrirLivro(id){
-  livroAtual = livros.find(livro => livro.id === id);
-  if(!livroAtual) return;
 
-  biblioteca.style.display = "none";
-  leitor.style.display = "block";
-  tituloLeitor.textContent = livroAtual.titulo;
-
-  paginasLivro.innerHTML = "";
-  listaCapitulos.innerHTML = "";
-
-  livroAtual.paginas.forEach((pagina, indice) => {
-    const section = document.createElement("section");
-    section.className = "page" + (pagina.tipo === "capa" ? " cover" : "");
-
-    if(pagina.tipo === "capa"){
-      section.innerHTML = pagina.html;
-    } else {
-      section.innerHTML = `
-        <div class="chapter">
-          <small>${pagina.capitulo || "Leitura"}</small>
-          <h2>${pagina.titulo || ""}</h2>
-        </div>
-        ${pagina.html}
-        <p class="number">${indice}</p>
-      `;
-    }
-
-    paginasLivro.appendChild(section);
-
-    const botao = document.createElement("button");
-    botao.textContent = indice === 0
-      ? "📖 Capa"
-      : `${indice} — ${pagina.titulo || "Página"}`;
-    botao.onclick = () => irParaPagina(indice);
-    listaCapitulos.appendChild(botao);
+  livroAtual = livros.find(function(livro){
+    return livro.id === id;
   });
 
-  paginas = document.querySelectorAll("#paginasLivro .page");
+  if(!livroAtual){
+    return;
+  }
+
+  document.getElementById("biblioteca").style.display = "none";
+  document.getElementById("leitor").style.display = "block";
+
+  document.getElementById("tituloLivro").textContent =
+    livroAtual.titulo;
+
+  capituloAtual = 0;
   paginaAtual = 0;
-  mostrarPagina();
+
+  mostrarCapitulos();
+
+  if(livroAtual.capitulos.length > 0){
+    mostrarPagina();
+  }else{
+    document.getElementById("pagina").innerHTML =
+      "<h2>Livro vazio</h2><p>Este livro ainda não possui capítulos.</p>";
+  }
 }
 
-function voltarBiblioteca(){
-  leitor.style.display = "none";
-  biblioteca.style.display = "block";
-  document.getElementById("listaCapitulos").style.display = "none";
-  window.scrollTo({top:0,behavior:"smooth"});
+function mostrarCapitulos(){
+
+  var menu = document.getElementById("capitulos");
+
+  if(menu.style.display === "block"){
+    menu.style.display = "none";
+    return;
+  }
+
+  menu.innerHTML = "";
+
+  if(!livroAtual || livroAtual.capitulos.length === 0){
+    menu.innerHTML = "<p>Nenhum capítulo disponível.</p>";
+  }else{
+
+    livroAtual.capitulos.forEach(function(capitulo,index){
+
+      var botao = document.createElement("button");
+
+      botao.className = "capitulo";
+
+      botao.textContent =
+        "Capítulo " +
+        capitulo.numero +
+        " — " +
+        capitulo.titulo;
+
+      botao.onclick = function(){
+        capituloAtual = index;
+        paginaAtual = 0;
+        mostrarPagina();
+        menu.style.display = "none";
+      };
+
+      menu.appendChild(botao);
+
+    });
+  }
+
+  menu.style.display = "block";
 }
 
 function mostrarPagina(){
-  paginas.forEach((pagina, indice) => {
-    pagina.classList.toggle("active", indice === paginaAtual);
-  });
 
-  anterior.disabled = paginaAtual === 0;
-  proximo.disabled = paginaAtual === paginas.length - 1;
+  if(!livroAtual){
+    return;
+  }
 
-  contador.textContent = paginaAtual === 0
-    ? "Capa"
-    : "Página " + paginaAtual + " de " + (paginas.length - 1);
+  var capitulo =
+    livroAtual.capitulos[capituloAtual];
 
-  window.scrollTo({top:0,behavior:"smooth"});
+  if(!capitulo){
+    return;
+  }
+
+  var pagina =
+    capitulo.paginas[paginaAtual];
+
+  if(!pagina){
+    return;
+  }
+
+  document.getElementById("pagina").innerHTML =
+    pagina.texto;
+
+  document.getElementById("numeroPagina").textContent =
+    "Capítulo " +
+    capitulo.numero +
+    " • Página " +
+    (paginaAtual + 1) +
+    " de " +
+    capitulo.paginas.length;
 }
 
 function proximaPagina(){
-  if(paginaAtual < paginas.length - 1){
+
+  if(!livroAtual){
+    return;
+  }
+
+  var capitulo =
+    livroAtual.capitulos[capituloAtual];
+
+  if(!capitulo){
+    return;
+  }
+
+  if(paginaAtual < capitulo.paginas.length - 1){
+
     paginaAtual++;
     mostrarPagina();
+
+  }else if(capituloAtual < livroAtual.capitulos.length - 1){
+
+    capituloAtual++;
+    paginaAtual = 0;
+    mostrarPagina();
+
   }
 }
 
 function paginaAnterior(){
+
   if(paginaAtual > 0){
+
     paginaAtual--;
+    mostrarPagina();
+
+  }else if(capituloAtual > 0){
+
+    capituloAtual--;
+
+    var capitulo =
+      livroAtual.capitulos[capituloAtual];
+
+    paginaAtual =
+      capitulo.paginas.length - 1;
+
     mostrarPagina();
   }
 }
 
-function abrirMenu(){
-  const lista = document.getElementById("listaCapitulos");
-  lista.style.display = lista.style.display === "block" ? "none" : "block";
+function voltarBiblioteca(){
+
+  document.getElementById("leitor").style.display = "none";
+  document.getElementById("biblioteca").style.display = "block";
+
+  document.getElementById("capitulos").style.display = "none";
 }
 
-function irParaPagina(numero){
-  paginaAtual = numero;
-  mostrarPagina();
-  document.getElementById("listaCapitulos").style.display = "none";
-}
-
-document.addEventListener("keydown", event => {
-  if(event.key === "ArrowRight") proximaPagina();
-  if(event.key === "ArrowLeft") paginaAnterior();
-});
-
-alert("JavaScript funcionando!");
-  console.log("TESTE: JavaScript chegou aqui");
 mostrarBiblioteca();
 </script>
 
