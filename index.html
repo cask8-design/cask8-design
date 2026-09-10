@@ -82,12 +82,16 @@ button:active{transform:scale(.98)}
 #pagina{
   text-align:center;
   min-height:300px;
+  margin:0 -16px;
+  overflow:hidden;
+  background:#050507;
 }
 #pagina canvas{
+  display:block;
   max-width:100%;
   height:auto;
-  background:white;
-  box-shadow:0 8px 30px rgba(0,0,0,.45);
+  margin:0 auto;
+  background:transparent;
 }
 
 .carregando{
@@ -100,6 +104,51 @@ button:active{transform:scale(.98)}
   text-align:center;
   padding:30px 10px;
   line-height:1.5;
+}
+
+#leitor{
+  background:#050507;
+  min-height:100vh;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  padding:10px 0;
+  background:rgba(5,5,7,.94);
+  backdrop-filter:blur(8px);
+}
+
+.controles{
+  position:sticky;
+  bottom:12px;
+  z-index:10;
+  width:max-content;
+  max-width:calc(100% - 20px);
+  margin:14px auto;
+  padding:7px;
+  border-radius:14px;
+  background:rgba(20,20,25,.94);
+  border:1px solid #33333d;
+  box-shadow:0 8px 25px rgba(0,0,0,.45);
+}
+
+.controles button{
+  padding:10px 13px;
+}
+
+.controles span{
+  min-width:105px;
+  text-align:center;
+  font-size:14px;
+}
+
+@media (max-width:600px){
+  main{padding:0 16px 20px}
+  #leitor{margin:0 -16px;padding:0 16px}
+  #pagina{margin:0 -16px}
+  .topbar h2{font-size:17px}
 }
 
 footer{
@@ -200,19 +249,18 @@ async function mostrarPagina(){
     var page = await pdf.getPage(paginaAtual);
 
     var baseViewport = page.getViewport({scale:1});
-    var larguraMaxima = Math.min(
-      window.innerWidth - 32,
-      850
-    );
+    var larguraMaxima = Math.min(window.innerWidth, 900);
     var escala = larguraMaxima / baseViewport.width;
 
-    var viewport = page.getViewport({scale:escala});
+    // Renderiza em resolução maior para manter a imagem nítida.
+    var qualidade = Math.min(window.devicePixelRatio || 1, 2);
+    var viewport = page.getViewport({scale:escala * qualidade});
 
     var canvas = document.createElement("canvas");
-    var context = canvas.getContext("2d");
+    var context = canvas.getContext("2d", {willReadFrequently:true});
 
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
 
     area.innerHTML = "";
     area.appendChild(canvas);
@@ -221,6 +269,10 @@ async function mostrarPagina(){
       canvasContext: context,
       viewport: viewport
     }).promise;
+
+    // Remove somente o branco que está conectado às bordas da página.
+    // Assim a margem branca desaparece, mas balões/áreas brancas dentro do manhwa continuam.
+    removerMargemBranca(canvas);
 
     document.getElementById("numeroPagina").textContent =
       "Página " + paginaAtual + " / " + totalPaginas;
@@ -236,6 +288,59 @@ async function mostrarPagina(){
   carregandoPagina = false;
 }
 
+function removerMargemBranca(canvas){
+  var ctx = canvas.getContext("2d", {willReadFrequently:true});
+  var img = ctx.getImageData(0,0,canvas.width,canvas.height);
+  var data = img.data;
+  var w = canvas.width;
+  var h = canvas.height;
+
+  function branco(i){
+    return data[i] > 244 &&
+           data[i+1] > 244 &&
+           data[i+2] > 244 &&
+           data[i+3] > 0;
+  }
+
+  var visitado = new Uint8Array(w*h);
+  var fila = new Int32Array(w*h);
+  var inicio = 0, fim = 0;
+
+  function adicionar(x,y){
+    if(x<0 || x>=w || y<0 || y>=h) return;
+    var p = y*w+x;
+    if(visitado[p]) return;
+    var i = p*4;
+    if(!branco(i)) return;
+    visitado[p] = 1;
+    fila[fim++] = p;
+  }
+
+  for(var x=0;x<w;x++){
+    adicionar(x,0);
+    adicionar(x,h-1);
+  }
+  for(var y=0;y<h;y++){
+    adicionar(0,y);
+    adicionar(w-1,y);
+  }
+
+  while(inicio < fim){
+    var p = fila[inicio++];
+    var x = p % w;
+    var y = (p - x) / w;
+    var i = p*4;
+
+    data[i+3] = 0;
+
+    adicionar(x+1,y);
+    adicionar(x-1,y);
+    adicionar(x,y+1);
+    adicionar(x,y-1);
+  }
+
+  ctx.putImageData(img,0,0);
+}
 window.abrirLivro = function(){
   localStorage.setItem("livroAberto","true");
 
