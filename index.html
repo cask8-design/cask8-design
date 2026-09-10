@@ -3,169 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minha Biblioteca</title>
+<title>Minha Biblioteca — O Rei Sem Rosto</title>
 
 <style>
-*{
-  box-sizing:border-box;
+* {
+  box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#111;
-  color:#fff;
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0b0b0f;
+  color: white;
 }
 
-header{
-  text-align:center;
-  padding:25px 15px;
-  background:#1b1b1b;
+header {
+  padding: 28px 20px 18px;
+  text-align: center;
+  background: linear-gradient(180deg, #15151d, #0b0b0f);
 }
 
-header h1{
-  margin:0 0 8px;
+header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
 }
 
-header p{
-  margin:0;
-  color:#bbb;
+header p {
+  margin: 0;
+  color: #aaa;
 }
 
-main{
-  max-width:1000px;
-  margin:auto;
-  padding:20px;
+main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 24px 16px 40px;
 }
 
-#biblioteca{
-  display:block;
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
 }
 
-.grade-livros{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+.card {
+  background: #17171e;
+  border: 1px solid #292932;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,.35);
 }
 
-.livro{
-  background:#1d1d1d;
-  border-radius:12px;
-  padding:15px;
-  text-align:center;
-  box-shadow:0 4px 15px #000;
+.capa {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  overflow: hidden;
 }
 
-.capa-livro{
-  width:100%;
-  height:300px;
-  overflow:hidden;
-  border-radius:8px;
-  background:#333;
+.capa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.capa-livro img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+.capa .placeholder {
+  font-size: 70px;
 }
 
-.livro h3{
-  margin:15px 0 8px;
+.card-content {
+  padding: 16px;
 }
 
-.livro p{
-  color:#bbb;
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 21px;
 }
 
-button{
-  border:0;
-  border-radius:8px;
-  padding:12px 18px;
-  background:#fff;
-  color:#111;
-  font-weight:bold;
-  cursor:pointer;
-  margin:5px;
+.card p {
+  margin: 0 0 15px;
+  color: #bbb;
+  line-height: 1.4;
 }
 
-button:hover{
-  opacity:.85;
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: white;
+  color: #111;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
 }
 
-#leitor{
-  display:none;
+button:hover {
+  opacity: .9;
 }
 
-.topo-leitor{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
+#leitor {
+  display: none;
 }
 
-#pagina{
-  min-height:500px;
-  background:#f5f5f5;
-  color:#111;
-  border-radius:12px;
-  padding:35px 25px;
-  font-size:19px;
-  line-height:1.7;
+.topbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.navegacao{
-  text-align:center;
-  margin-top:20px;
+.topbar h2 {
+  margin: 0;
+  flex: 1;
+  min-width: 180px;
 }
 
-#numeroPagina{
-  display:inline-block;
-  margin:10px;
-  color:#bbb;
+.pdf-box {
+  background: #17171e;
+  border: 1px solid #292932;
+  border-radius: 14px;
+  padding: 10px;
 }
 
-#capitulos{
-  display:none;
-  background:#222;
-  border-radius:10px;
-  padding:15px;
-  margin-bottom:20px;
+iframe {
+  width: 100%;
+  height: 75vh;
+  min-height: 500px;
+  border: 0;
+  border-radius: 8px;
+  background: white;
 }
 
-.capitulo{
-  display:block;
-  width:100%;
-  text-align:left;
-  background:#333;
-  color:#fff;
-  margin:8px 0;
+.aviso {
+  text-align: center;
+  color: #aaa;
+  padding: 12px 4px 2px;
+  font-size: 14px;
 }
 
-.capa-pagina{
-  text-align:center;
+.link-pdf {
+  color: white;
 }
 
-.capa-pagina h2{
-  font-size:30px;
-}
-
-@media(max-width:600px){
-  main{
-    padding:12px;
-  }
-
-  .capa-livro{
-    height:350px;
-  }
-
-  #pagina{
-    min-height:450px;
-    padding:25px 18px;
-    font-size:17px;
-  }
+footer {
+  text-align: center;
+  color: #777;
+  padding: 20px;
 }
 </style>
 </head>
@@ -174,306 +159,171 @@ button:hover{
 
 <header>
   <h1>📚 Minha Biblioteca</h1>
-  <p>Escolha um livro para começar a leitura</p>
+  <p>Escolha uma história para começar a leitura.</p>
 </header>
 
 <main>
 
 <section id="biblioteca">
-  <div class="grade-livros" id="gradeLivros"></div>
+
+  <div class="grade">
+
+    <article class="card">
+
+      <div class="capa">
+
+        <img
+          src="Screenshot_20260909-190353~3.jpg"
+          alt="Capa de O Rei Sem Rosto"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+        >
+
+        <div class="placeholder" style="display:none">
+          📖
+        </div>
+
+      </div>
+
+      <div class="card-content">
+
+        <h2>O Rei Sem Rosto</h2>
+
+        <p>
+          Livro completo em formato digital.
+        </p>
+
+        <button onclick="abrirLivro()">
+          ▶ Ler livro
+        </button>
+
+      </div>
+
+    </article>
+
+  </div>
+
 </section>
+
 
 <section id="leitor">
 
-  <div class="topo-leitor">
-    <button onclick="voltarBiblioteca()">← Biblioteca</button>
+  <div class="topbar">
 
-    <h2 id="tituloLivro">Livro</h2>
+    <button onclick="voltarBiblioteca()">
+      ← Biblioteca
+    </button>
 
-    <button onclick="mostrarCapitulos()">☰ Capítulos</button>
+    <h2>
+      O Rei Sem Rosto
+    </h2>
+
   </div>
 
-  <div id="capitulos"></div>
 
-  <div id="pagina"></div>
+  <div class="pdf-box">
 
-  <div class="navegacao">
-    <button onclick="paginaAnterior()">← Anterior</button>
-    <span id="numeroPagina">Página 1</span>
-    <button onclick="proximaPagina()">Próxima →</button>
+    <iframe
+      id="pdfViewer"
+      title="Leitor de O Rei Sem Rosto">
+    </iframe>
+
+    <div class="aviso">
+
+      Se o leitor não abrir no seu celular,
+      <a
+        class="link-pdf"
+        href="O-Rei-Sem-Rosto.pdf"
+        target="_blank">
+        abra o PDF diretamente
+      </a>.
+
+    </div>
+
   </div>
 
 </section>
 
 </main>
 
+
+<footer>
+  O Rei Sem Rosto
+</footer>
+
+
 <script>
-var livros = [
-  {
-    id: 1,
-    titulo: "Uma Sombra sob a Cidade",
-    descricao: "Uma história de mistério, terror e algo despertando.",
-    capa: '<img src="Screenshot_20260909-190353~3.jpg" alt="Capa de Uma Sombra sob a Cidade">',
-    capitulos: [
-      {
-        numero: 1,
-        titulo: "O Monstro no Telhado",
-        paginas: [
-          {
-            titulo: "O Monstro no Telhado",
-            texto: `
-              <div class="capa-pagina">
-                <h2>O Monstro no Telhado</h2>
-                <p>Uma presença desconhecida observa a cidade durante a noite.</p>
-              </div>
-            `
-          },
-          {
-            titulo: "A Noite",
-            texto: `
-              <h2>A Noite</h2>
-              <p>
-                A cidade parecia normal naquela noite. As ruas estavam
-                silenciosas e poucas pessoas ainda estavam acordadas.
-              </p>
-              <p>
-                Mas havia algo diferente no ar. Algo que ninguém conseguia
-                explicar.
-              </p>
-            `
-          },
-          {
-            titulo: "O Olhar",
-            texto: `
-              <h2>O Olhar</h2>
-              <p>
-                Do outro lado da rua, sobre um telhado, uma criatura observava.
-              </p>
-              <p>
-                Seus olhos completamente negros pareciam atravessar a escuridão.
-              </p>
-            `
-          }
-        ]
-      }
-    ]
-  },
 
-  {
-    id: 2,
-    titulo: "Novo livro",
-    descricao: "Adicione uma nova história à sua biblioteca.",
-    capa: `
-      <div style="
-        height:100%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:70px;
-      ">📖</div>
-    `,
-    capitulos: []
+function abrirLivro() {
+
+  localStorage.setItem(
+    "livroAberto",
+    "true"
+  );
+
+  document.getElementById(
+    "biblioteca"
+  ).style.display = "none";
+
+  document.getElementById(
+    "leitor"
+  ).style.display = "block";
+
+
+  var viewer =
+    document.getElementById(
+      "pdfViewer"
+    );
+
+
+  if (!viewer.src) {
+
+    viewer.src =
+      "O-Rei-Sem-Rosto.pdf#page=1&view=FitH";
+
   }
-];
 
-var livroAtual = null;
-var capituloAtual = 0;
-var paginaAtual = 0;
 
-function mostrarBiblioteca(){
-
-  var grade = document.getElementById("gradeLivros");
-
-  grade.innerHTML = "";
-
-  livros.forEach(function(livro){
-
-    var card = document.createElement("div");
-
-    card.className = "livro";
-
-    card.innerHTML =
-      '<div class="capa-livro">' +
-        livro.capa +
-      '</div>' +
-
-      '<h3>' +
-        livro.titulo +
-      '</h3>' +
-
-      '<p>' +
-        livro.descricao +
-      '</p>' +
-
-      '<button onclick="abrirLivro(' +
-        livro.id +
-      ')">▶ Ler livro</button>';
-
-    grade.appendChild(card);
-
-  });
+  window.scrollTo(0, 0);
 }
 
-function abrirLivro(id){
 
-  livroAtual = livros.find(function(livro){
-    return livro.id === id;
-  });
+function voltarBiblioteca() {
 
-  if(!livroAtual){
-    return;
-  }
+  localStorage.removeItem(
+    "livroAberto"
+  );
 
-  document.getElementById("biblioteca").style.display = "none";
-  document.getElementById("leitor").style.display = "block";
 
-  document.getElementById("tituloLivro").textContent =
-    livroAtual.titulo;
+  document.getElementById(
+    "leitor"
+  ).style.display = "none";
 
-  capituloAtual = 0;
-  paginaAtual = 0;
+  document.getElementById(
+    "biblioteca"
+  ).style.display = "block";
 
-  mostrarCapitulos();
 
-  if(livroAtual.capitulos.length > 0){
-    mostrarPagina();
-  }else{
-    document.getElementById("pagina").innerHTML =
-      "<h2>Livro vazio</h2><p>Este livro ainda não possui capítulos.</p>";
-  }
+  window.scrollTo(0, 0);
 }
 
-function mostrarCapitulos(){
 
-  var menu = document.getElementById("capitulos");
+window.addEventListener(
+  "load",
+  function() {
 
-  if(menu.style.display === "block"){
-    menu.style.display = "none";
-    return;
-  }
+    if (
+      localStorage.getItem(
+        "livroAberto"
+      ) === "true"
+    ) {
 
-  menu.innerHTML = "";
+      abrirLivro();
 
-  if(!livroAtual || livroAtual.capitulos.length === 0){
-    menu.innerHTML = "<p>Nenhum capítulo disponível.</p>";
-  }else{
-
-    livroAtual.capitulos.forEach(function(capitulo,index){
-
-      var botao = document.createElement("button");
-
-      botao.className = "capitulo";
-
-      botao.textContent =
-        "Capítulo " +
-        capitulo.numero +
-        " — " +
-        capitulo.titulo;
-
-      botao.onclick = function(){
-        capituloAtual = index;
-        paginaAtual = 0;
-        mostrarPagina();
-        menu.style.display = "none";
-      };
-
-      menu.appendChild(botao);
-
-    });
-  }
-
-  menu.style.display = "block";
-}
-
-function mostrarPagina(){
-
-  if(!livroAtual){
-    return;
-  }
-
-  var capitulo =
-    livroAtual.capitulos[capituloAtual];
-
-  if(!capitulo){
-    return;
-  }
-
-  var pagina =
-    capitulo.paginas[paginaAtual];
-
-  if(!pagina){
-    return;
-  }
-
-  document.getElementById("pagina").innerHTML =
-    pagina.texto;
-
-  document.getElementById("numeroPagina").textContent =
-    "Capítulo " +
-    capitulo.numero +
-    " • Página " +
-    (paginaAtual + 1) +
-    " de " +
-    capitulo.paginas.length;
-}
-
-function proximaPagina(){
-
-  if(!livroAtual){
-    return;
-  }
-
-  var capitulo =
-    livroAtual.capitulos[capituloAtual];
-
-  if(!capitulo){
-    return;
-  }
-
-  if(paginaAtual < capitulo.paginas.length - 1){
-
-    paginaAtual++;
-    mostrarPagina();
-
-  }else if(capituloAtual < livroAtual.capitulos.length - 1){
-
-    capituloAtual++;
-    paginaAtual = 0;
-    mostrarPagina();
+    }
 
   }
-}
+);
 
-function paginaAnterior(){
-
-  if(paginaAtual > 0){
-
-    paginaAtual--;
-    mostrarPagina();
-
-  }else if(capituloAtual > 0){
-
-    capituloAtual--;
-
-    var capitulo =
-      livroAtual.capitulos[capituloAtual];
-
-    paginaAtual =
-      capitulo.paginas.length - 1;
-
-    mostrarPagina();
-  }
-}
-
-function voltarBiblioteca(){
-
-  document.getElementById("leitor").style.display = "none";
-  document.getElementById("biblioteca").style.display = "block";
-
-  document.getElementById("capitulos").style.display = "none";
-}
-
-mostrarBiblioteca();
 </script>
 
 </body>
