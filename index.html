@@ -242,8 +242,11 @@ function atualizarUI(){const total=pdf?pdf.numPages:63;document.getElementById("
 function proximaPagina(){if(pdf&&paginaAtual<pdf.numPages)renderPagina(paginaAtual+1)}function paginaAnterior(){if(pdf&&paginaAtual>1)renderPagina(paginaAtual-1)}
 function voltarBiblioteca(){salvarEstado("biblioteca");renderToken++;document.getElementById("leitor").style.display="none";document.getElementById("biblioteca").style.display="block";document.getElementById("controls").style.display="none";document.getElementById("progress").style.width="0"}
 function toggleModo(){document.body.classList.toggle("modo")}
-window.addEventListener("load",async()=>{await carregarCapaPublica();const {data}=await sb.auth.getUser();if(data?.user){currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros()}const e=lerEstado();if(e.view==="leitor")abrirLivro()});
-window.addEventListener("beforeunload",()=>salvarEstado(document.getElementById("leitor").style.display==="none"?"biblioteca":"leitor"));
+window.addEventListener("load",async()=>{await carregarCapaPublica();const {data}=await sb.auth.getUser();if(data?.user){currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros()}
+  // Ao atualizar/recarregar a página, permanecer na biblioteca. A posição do leitor continua salva para quando o livro for aberto manualmente.
+  document.getElementById("biblioteca").style.display="block";document.getElementById("leitor").style.display="none";document.getElementById("controls").style.display="none";
+});
+window.addEventListener("beforeunload",()=>{if(document.getElementById("leitor").style.display!=="none"){localStorage.setItem(STORAGE_KEY,JSON.stringify({view:"biblioteca",pagina:paginaAtual}));}});
 </script>
 </body>
 </html>
