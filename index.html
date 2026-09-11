@@ -108,6 +108,10 @@ body.modo-tela-cheia #pagina{padding-top:4px}
 
 <main>
 <section id="biblioteca">
+  <div style="max-width:330px;margin:12px auto 0;text-align:center">
+    <button id="adminBtn" class="primary" onclick="abrirAdmin()" style="display:none;width:100%">🔐 Área do administrador</button>
+    <button id="loginBtn" onclick="abrirLogin()" style="display:block;width:100%;margin-top:10px;background:#1b1b22;color:#fff;border:1px solid #34343d">Entrar como administrador</button>
+  </div>
   <div class="card">
     <div class="cover">
       <img src="Screenshot_20260909-190353~3.jpg" alt="Capa de O Rei Sem Rosto">
@@ -134,6 +138,35 @@ body.modo-tela-cheia #pagina{padding-top:4px}
 </section>
 </main>
 
+<!-- Login -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:#000b;z-index:2000;padding:20px;align-items:center;justify-content:center">
+  <div style="width:min(420px,100%);background:#15151b;border:1px solid #34343d;border-radius:20px;padding:22px;box-shadow:0 20px 60px #000">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2 style="margin:0;font-size:20px">🔐 Administrador</h2>
+      <button onclick="fecharLogin()" style="width:42px;height:42px;padding:0">✕</button>
+    </div>
+    <p style="color:#999;margin:10px 0 18px;font-size:13px">Entre com o e-mail e a senha do usuário administrador criado no Supabase.</p>
+    <input id="loginEmail" type="email" placeholder="E-mail" autocomplete="username"
+      style="width:100%;padding:14px;border-radius:12px;border:1px solid #34343d;background:#0d0d11;color:#fff;font-size:15px;margin-bottom:10px">
+    <input id="loginPassword" type="password" placeholder="Senha" autocomplete="current-password"
+      style="width:100%;padding:14px;border-radius:12px;border:1px solid #34343d;background:#0d0d11;color:#fff;font-size:15px">
+    <button onclick="entrarAdmin()" style="width:100%;margin-top:14px;background:#fff;color:#111">Entrar</button>
+    <div id="loginMsg" style="min-height:20px;margin-top:12px;text-align:center;color:#ffb4b4;font-size:13px"></div>
+  </div>
+</div>
+
+<!-- Área protegida -->
+<section id="adminArea" style="display:none;max-width:700px;margin:20px auto;padding:20px;background:#121217;border:1px solid #292931;border-radius:20px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+    <div>
+      <h2 style="margin:0">⚙️ Área do administrador</h2>
+      <p id="adminEmail" style="margin:6px 0 0;color:#999;font-size:13px"></p>
+    </div>
+    <button onclick="sairAdmin()">Sair</button>
+  </div>
+  <p style="color:#bbb;margin-top:20px">Login protegido pelo Supabase Authentication. As funções de administração podem ser adicionadas aqui.</p>
+</section>
+
 <button class="side-nav side-prev" id="sidePrev" onclick="paginaAnterior()" aria-label="Página anterior">‹</button>
 <button class="side-nav side-next" id="sideNext" onclick="proximaPagina()" aria-label="Próxima página">›</button>
 
@@ -145,7 +178,60 @@ body.modo-tela-cheia #pagina{padding-top:4px}
 </div>
 <div class="progress" id="progress"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const SUPABASE_URL = "https://fftvitfjhsatblgxvalv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_BJVioT8Oluxs2G97HcijnQ_P_s0PdOI";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+function abrirLogin(){
+  document.getElementById("loginModal").style.display="flex";
+  document.getElementById("loginMsg").textContent="";
+}
+function fecharLogin(){
+  document.getElementById("loginModal").style.display="none";
+}
+async function entrarAdmin(){
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
+  const msg=document.getElementById("loginMsg");
+  msg.textContent="";
+  if(!email || !password){
+    msg.textContent="Preencha o e-mail e a senha.";
+    return;
+  }
+  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){
+    msg.textContent="E-mail ou senha incorretos.";
+    return;
+  }
+  fecharLogin();
+  mostrarAdmin();
+}
+async function mostrarAdmin(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  const logado=!!session;
+  document.getElementById("adminBtn").style.display=logado?"block":"none";
+  document.getElementById("loginBtn").style.display=logado?"none":"block";
+  if(logado){
+    document.getElementById("adminArea").style.display="block";
+    document.getElementById("adminEmail").textContent=session.user.email || "";
+  }else{
+    document.getElementById("adminArea").style.display="none";
+  }
+}
+function abrirAdmin(){
+  document.getElementById("adminArea").scrollIntoView({behavior:"smooth"});
+}
+async function sairAdmin(){
+  await supabaseClient.auth.signOut();
+  mostrarAdmin();
+}
+supabaseClient.auth.onAuthStateChange(()=>mostrarAdmin());
+window.addEventListener("load",mostrarAdmin);
+</script>
+
 <script>
 const PDF_URL = "O-Rei-Sem-Rosto.pdf";
 const TOTAL_FALLBACK = 63;
