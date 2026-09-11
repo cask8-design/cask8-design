@@ -156,7 +156,7 @@ body.modo-tela-cheia #pagina{padding-top:4px}
 </div>
 
 <!-- Área protegida -->
-<section id="adminArea" style="display:none;max-width:700px;margin:20px auto;padding:20px;background:#121217;border:1px solid #292931;border-radius:20px">
+<section id="adminArea" style="display:none;max-width:760px;margin:20px auto;padding:20px;background:#121217;border:1px solid #292931;border-radius:20px">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
     <div>
       <h2 style="margin:0">⚙️ Área do administrador</h2>
@@ -164,7 +164,36 @@ body.modo-tela-cheia #pagina{padding-top:4px}
     </div>
     <button onclick="sairAdmin()">Sair</button>
   </div>
-  <p style="color:#bbb;margin-top:20px">Login protegido pelo Supabase Authentication. As funções de administração podem ser adicionadas aqui.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px">
+    <button onclick="carregarLivrosAdmin()" style="width:100%">📚 Livros</button>
+    <button onclick="carregarCapitulosAdmin()" style="width:100%">📖 Capítulos</button>
+  </div>
+
+  <div id="adminMsg" style="min-height:20px;margin:14px 0;text-align:center;color:#9fe6b8;font-size:13px"></div>
+
+  <div id="livrosAdmin" style="display:none">
+    <h3>📚 Gerenciar livros</h3>
+    <div style="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px">
+      <input id="novoLivroTitulo" type="text" placeholder="Título do novo livro"
+        style="width:100%;padding:13px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff">
+      <button onclick="adicionarLivro()" style="width:100%;margin-top:10px;background:#fff;color:#111">+ Adicionar livro</button>
+    </div>
+    <div id="listaLivrosAdmin" style="margin-top:14px"></div>
+  </div>
+
+  <div id="capitulosAdmin" style="display:none">
+    <h3>📖 Gerenciar capítulos</h3>
+    <div style="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px">
+      <select id="capLivro" style="width:100%;padding:13px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff"></select>
+      <input id="capNumero" type="number" min="1" placeholder="Número do capítulo"
+        style="width:100%;padding:13px;margin-top:10px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff">
+      <input id="capTitulo" type="text" placeholder="Título do capítulo"
+        style="width:100%;padding:13px;margin-top:10px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff">
+      <button onclick="adicionarCapitulo()" style="width:100%;margin-top:10px;background:#fff;color:#111">+ Adicionar capítulo</button>
+    </div>
+    <div id="listaCapitulosAdmin" style="margin-top:14px"></div>
+  </div>
 </section>
 
 <button class="side-nav side-prev" id="sidePrev" onclick="paginaAnterior()" aria-label="Página anterior">‹</button>
@@ -221,6 +250,146 @@ async function mostrarAdmin(){
     document.getElementById("adminArea").style.display="none";
   }
 }
+
+async function adminSeguro(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  return session;
+}
+function adminMensagem(text, erro=false){
+  const el=document.getElementById("adminMsg");
+  el.textContent=text||"";
+  el.style.color=erro?"#ffb4b4":"#9fe6b8";
+}
+function mostrarPainelAdmin(nome){
+  document.getElementById("livrosAdmin").style.display=nome==="livros"?"block":"none";
+  document.getElementById("capitulosAdmin").style.display=nome==="capitulos"?"block":"none";
+}
+async function carregarLivrosAdmin(){
+  if(!(await adminSeguro())) return;
+  mostrarPainelAdmin("livros");
+  adminMensagem("Carregando livros...");
+  const {data,error}=await supabaseClient.from("Livros").select("*").order("id",{ascending:true});
+  if(error){ adminMensagem("Não foi possível carregar os livros: "+error.message,true); return; }
+  const box=document.getElementById("listaLivrosAdmin");
+  box.innerHTML="";
+  const select=document.getElementById("capLivro");
+  select.innerHTML="";
+  if(!data.length){
+    box.innerHTML='<p style="color:#999">Nenhum livro cadastrado.</p>';
+    adminMensagem("");
+    return;
+  }
+  data.forEach(l=>{
+    const titulo=l.title ?? l.titulo ?? l.nome ?? "Livro sem título";
+    const id=l.id;
+    const row=document.createElement("div");
+    row.style.cssText="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px;margin-bottom:10px";
+    row.innerHTML=`<strong>${escapeHtml(titulo)}</strong><div style="color:#888;font-size:12px;margin-top:5px">ID: ${escapeHtml(String(id))}</div>
+      <button onclick="editarLivro(${JSON.stringify(id)})" style="margin-top:10px">✏️ Editar título</button>
+      <button onclick="excluirLivro(${JSON.stringify(id)})" style="margin-top:10px;margin-left:6px">🗑️ Excluir</button>`;
+    box.appendChild(row);
+    const opt=document.createElement("option");
+    opt.value=id; opt.textContent=titulo;
+    select.appendChild(opt);
+  });
+  adminMensagem("Livros carregados.");
+}
+async function adicionarLivro(){
+  if(!(await adminSeguro())) return;
+  const titulo=document.getElementById("novoLivroTitulo").value.trim();
+  if(!titulo){ adminMensagem("Digite o título do livro.",true); return; }
+  const {error}=await supabaseClient.from("Livros").insert({title:titulo});
+  if(error){ adminMensagem("Erro ao adicionar: "+error.message,true); return; }
+  document.getElementById("novoLivroTitulo").value="";
+  await carregarLivrosAdmin();
+  adminMensagem("Livro adicionado com sucesso!");
+}
+async function editarLivro(id){
+  const titulo=prompt("Novo título do livro:");
+  if(titulo===null) return;
+  const valor=titulo.trim();
+  if(!valor){ adminMensagem("O título não pode ficar vazio.",true); return; }
+  const {error}=await supabaseClient.from("Livros").update({title:valor}).eq("id",id);
+  if(error){ adminMensagem("Erro ao editar: "+error.message,true); return; }
+  await carregarLivrosAdmin();
+  adminMensagem("Livro atualizado!");
+}
+async function excluirLivro(id){
+  if(!confirm("Excluir este livro? Os capítulos relacionados podem continuar existindo.")) return;
+  const {error}=await supabaseClient.from("Livros").delete().eq("id",id);
+  if(error){ adminMensagem("Erro ao excluir: "+error.message,true); return; }
+  await carregarLivrosAdmin();
+  adminMensagem("Livro excluído.");
+}
+async function carregarCapitulosAdmin(){
+  if(!(await adminSeguro())) return;
+  mostrarPainelAdmin("capitulos");
+  adminMensagem("Carregando capítulos...");
+  const [livros, caps]=await Promise.all([
+    supabaseClient.from("Livros").select("*").order("id",{ascending:true}),
+    supabaseClient.from("capitulos").select("*").order("livro_id",{ascending:true}).order("numero",{ascending:true})
+  ]);
+  if(livros.error){ adminMensagem("Erro ao carregar livros: "+livros.error.message,true); return; }
+  if(caps.error){ adminMensagem("Erro ao carregar capítulos: "+caps.error.message,true); return; }
+  const select=document.getElementById("capLivro");
+  select.innerHTML="";
+  const nomes={};
+  (livros.data||[]).forEach(l=>{
+    const titulo=l.title ?? l.titulo ?? l.nome ?? "Livro sem título";
+    nomes[l.id]=titulo;
+    const opt=document.createElement("option");
+    opt.value=l.id; opt.textContent=titulo;
+    select.appendChild(opt);
+  });
+  const box=document.getElementById("listaCapitulosAdmin");
+  box.innerHTML="";
+  if(!caps.data.length) box.innerHTML='<p style="color:#999">Nenhum capítulo cadastrado.</p>';
+  (caps.data||[]).forEach(c=>{
+    const row=document.createElement("div");
+    row.style.cssText="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px;margin-bottom:10px";
+    const titulo=c.title ?? c.titulo ?? "Capítulo sem título";
+    row.innerHTML=`<strong>Capítulo ${escapeHtml(String(c.numero))} — ${escapeHtml(titulo)}</strong>
+      <div style="color:#888;font-size:12px;margin-top:5px">${escapeHtml(nomes[c.livro_id]||"Livro")}</div>
+      <button onclick="editarCapitulo(${JSON.stringify(c.id)})" style="margin-top:10px">✏️ Editar</button>
+      <button onclick="excluirCapitulo(${JSON.stringify(c.id)})" style="margin-top:10px;margin-left:6px">🗑️ Excluir</button>`;
+    box.appendChild(row);
+  });
+  adminMensagem("Capítulos carregados.");
+}
+async function adicionarCapitulo(){
+  if(!(await adminSeguro())) return;
+  const livroId=document.getElementById("capLivro").value;
+  const numero=Number(document.getElementById("capNumero").value);
+  const titulo=document.getElementById("capTitulo").value.trim();
+  if(!livroId || !numero || !titulo){ adminMensagem("Preencha livro, número e título.",true); return; }
+  const {error}=await supabaseClient.from("capitulos").insert({livro_id:Number(livroId),numero,title:titulo});
+  if(error){ adminMensagem("Erro ao adicionar: "+error.message,true); return; }
+  document.getElementById("capNumero").value="";
+  document.getElementById("capTitulo").value="";
+  await carregarCapitulosAdmin();
+  adminMensagem("Capítulo adicionado com sucesso!");
+}
+async function editarCapitulo(id){
+  const titulo=prompt("Novo título do capítulo:");
+  if(titulo===null) return;
+  const valor=titulo.trim();
+  if(!valor){ adminMensagem("O título não pode ficar vazio.",true); return; }
+  const {error}=await supabaseClient.from("capitulos").update({title:valor}).eq("id",id);
+  if(error){ adminMensagem("Erro ao editar: "+error.message,true); return; }
+  await carregarCapitulosAdmin();
+  adminMensagem("Capítulo atualizado!");
+}
+async function excluirCapitulo(id){
+  if(!confirm("Excluir este capítulo?")) return;
+  const {error}=await supabaseClient.from("capitulos").delete().eq("id",id);
+  if(error){ adminMensagem("Erro ao excluir: "+error.message,true); return; }
+  await carregarCapitulosAdmin();
+  adminMensagem("Capítulo excluído.");
+}
+function escapeHtml(v){
+  return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
 function abrirAdmin(){
   document.getElementById("adminArea").scrollIntoView({behavior:"smooth"});
 }
