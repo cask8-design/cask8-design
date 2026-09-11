@@ -104,7 +104,10 @@ async function mostrarLivros(){
   books=data||[];setStatus("Livros carregados.");
   let html='<div class="form"><input id="novoLivro" placeholder="Título do novo livro"><button style="width:100%" onclick="adicionarLivro()">+ Adicionar livro</button></div><h4>📚 Gerenciar livros</h4>';
   if(!books.length)html+='<div class="muted">Nenhum livro cadastrado.</div>';
-  for(const b of books)html+=`<div class="list-item"><b>${esc(b.title??b.titulo??"Sem título")}</b><div class="muted">ID: ${b.id}</div><div class="row"><button onclick="editarLivro(${b.id})">✏️ Editar título</button><button onclick="excluirLivro(${b.id})">🗑️ Excluir</button></div></div>`;
+  for(const b of books){
+    const capaAtual = b.capa && /^https?:\/\//i.test(String(b.capa)) ? `<img src="${esc(b.capa)}" style="width:54px;height:78px;object-fit:cover;border-radius:7px;vertical-align:middle;margin-right:8px" alt="Capa">` : "";
+    html+=`<div class="list-item"><div style="display:flex;align-items:center">${capaAtual}<div><b>${esc(b.title??b.titulo??"Sem título")}</b><div class="muted">ID: ${b.id}</div></div></div><div class="row"><button onclick="editarLivro(${b.id})">✏️ Editar título</button><button onclick="excluirLivro(${b.id})">🗑️ Excluir</button><label style="display:inline-flex;align-items:center;gap:6px;background:#fff;color:#111;border-radius:14px;padding:8px 11px;font-size:12px;font-weight:700;cursor:pointer">🖼️ Trocar capa<input type="file" accept="image/*" style="display:none" onchange="trocarCapa(${b.id},this.files[0],this)"></label></div></div>`;
+  }
   document.getElementById("adminContent").innerHTML=html;
 }
 async function adicionarLivro(){
@@ -122,6 +125,36 @@ async function excluirLivro(id){
   if(!confirm("Excluir este livro?"))return;
   const {error}=await sb.from("Livros").delete().eq("id",id);
   if(error){setError("Erro ao excluir livro: "+error.message);return}mostrarLivros();
+}
+
+async function trocarCapa(id,file,input){
+  if(!file)return;
+  if(!(await adminSeguro())){setError("Sessão de administrador expirada.",true);if(input)input.value="";return}
+  if(!file.type.startsWith("image/")){setError("Escolha uma imagem para a capa.");if(input)input.value="";return}
+  setStatus("Enviando nova capa...");
+  const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+  const path=`capas/livro-${id}-${Date.now()}.${ext}`;
+  const {error:uploadError}=await sb.storage.from("livros").upload(path,file,{contentType:file.type,upsert:false});
+  if(uploadError){setError("Erro ao enviar a capa: "+uploadError.message);if(input)input.value="";return}
+  const {data:urlData}=sb.storage.from("livros").getPublicUrl(path);
+  const url=urlData?.publicUrl;
+  if(!url){setError("Não foi possível gerar o endereço público da capa.");if(input)input.value="";return}
+  const {error:updateError}=await sb.from("Livros").update({capa:url}).eq("id",id);
+  if(updateError){setError("A imagem foi enviada, mas não foi possível salvar a capa no livro: "+updateError.message);if(input)input.value="";return}
+  setStatus("Capa trocada com sucesso!");
+  if(input)input.value="";
+  await carregarCapaPublica();
+  mostrarLivros();
+}
+
+async function carregarCapaPublica(){
+  const {data,error}=await sb.from("Livros").select("title,capa").eq("id",1).maybeSingle();
+  if(error||!data)return;
+  const url=typeof data.capa==="string" && /^https?:\/\//i.test(data.capa) ? data.capa : null;
+  const img=document.querySelector("#bookCard .cover img");
+  if(img && url){img.src=url;img.alt="Capa de "+(data.title||"O Rei Sem Rosto");}
+  const titulo=document.querySelector("#bookCard h2");
+  if(titulo && data.title)titulo.textContent=data.title;
 }
 
 async function mostrarCapitulos(){
@@ -186,7 +219,7 @@ function atualizarUI(){const total=pdf?pdf.numPages:63;document.getElementById("
 function proximaPagina(){if(pdf&&paginaAtual<pdf.numPages)renderPagina(paginaAtual+1)}function paginaAnterior(){if(pdf&&paginaAtual>1)renderPagina(paginaAtual-1)}
 function voltarBiblioteca(){salvarEstado("biblioteca");renderToken++;document.getElementById("leitor").style.display="none";document.getElementById("biblioteca").style.display="block";document.getElementById("controls").style.display="none";document.getElementById("progress").style.width="0"}
 function toggleModo(){document.body.classList.toggle("modo")}
-window.addEventListener("load",async()=>{const {data}=await sb.auth.getUser();if(data?.user){currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros()}const e=lerEstado();if(e.view==="leitor")abrirLivro()});
+window.addEventListener("load",async()=>{await carregarCapaPublica();const {data}=await sb.auth.getUser();if(data?.user){currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros()}const e=lerEstado();if(e.view==="leitor")abrirLivro()});
 window.addEventListener("beforeunload",()=>salvarEstado(document.getElementById("leitor").style.display==="none"?"biblioteca":"leitor"));
 </script>
 </body>
