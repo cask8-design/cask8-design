@@ -149,8 +149,7 @@ body.modo-tela-cheia #pagina{padding-top:4px}
 <script>
 const PDF_URL = "O-Rei-Sem-Rosto.pdf";
 const TOTAL_FALLBACK = 63;
-const STORAGE_KEY = "orei_sem_rosto_posicao_v2";
-const VIEW_KEY = "orei_sem_rosto_tela_v1";
+const STORAGE_KEY = "orei_sem_rosto_estado_v3";
 
 let pdf = null;
 let paginaAtual = 1;
@@ -160,18 +159,27 @@ let renderToken = 0;
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+function salvarEstado(view){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({view:view, pagina:paginaAtual}));
+}
 function salvarPosicao(){
-  localStorage.setItem(STORAGE_KEY, String(paginaAtual));
+  salvarEstado("leitor");
   atualizarUI();
 }
-
+function lerEstado(){
+  try{
+    const e=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+    return e && (e.view==="leitor" || e.view==="biblioteca") ? e : {view:"biblioteca",pagina:1};
+  }catch(_){ return {view:"biblioteca",pagina:1}; }
+}
 function lerPosicao(){
-  const n = parseInt(localStorage.getItem(STORAGE_KEY) || "1",10);
-  return Number.isFinite(n) && n >= 1 ? n : 1;
+  const e=lerEstado();
+  const n=parseInt(e.pagina||1,10);
+  return Number.isFinite(n)&&n>=1?n:1;
 }
 
 async function abrirLivro(){
-  localStorage.setItem(VIEW_KEY,"leitor");
+  salvarEstado("leitor");
   document.getElementById("biblioteca").style.display="none";
   document.getElementById("leitor").style.display="block";
   document.getElementById("controls").style.display="flex";
@@ -297,7 +305,7 @@ function cortarBordasBrancas(canvas){
 }
 
 function salvarPosicaoSilencioso(){
-  localStorage.setItem(STORAGE_KEY,String(paginaAtual));
+  salvarEstado("leitor");
 }
 
 function atualizarUI(){
@@ -327,7 +335,7 @@ async function paginaAnterior(){
 }
 
 function voltarBiblioteca(){
-  localStorage.setItem(VIEW_KEY,"biblioteca");
+  salvarEstado("biblioteca");
   renderToken++;
   document.getElementById("leitor").style.display="none";
   document.getElementById("biblioteca").style.display="block";
@@ -355,9 +363,14 @@ window.addEventListener("resize",()=>{
 // - se estava lendo, reabre o livro na última página salva;
 // - se voltou para a biblioteca, continua na biblioteca.
 window.addEventListener("load",()=>{
-  if(localStorage.getItem(VIEW_KEY)==="leitor"){
-    abrirLivro();
-  }
+  const estado=lerEstado();
+  if(estado.view==="leitor") abrirLivro();
+});
+
+// Garante que atualizar/fechar a página preserve exatamente a tela atual.
+window.addEventListener("pagehide",()=>{
+  const leitorVisivel=document.getElementById("leitor").style.display!=="none";
+  salvarEstado(leitorVisivel ? "leitor" : "biblioteca");
 });
 </script>
 </body>
