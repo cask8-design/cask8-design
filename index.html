@@ -150,6 +150,7 @@ body.modo-tela-cheia #pagina{padding-top:4px}
 const PDF_URL = "O-Rei-Sem-Rosto.pdf";
 const TOTAL_FALLBACK = 63;
 const STORAGE_KEY = "orei_sem_rosto_posicao_v2";
+const VIEW_KEY = "orei_sem_rosto_tela_v1";
 
 let pdf = null;
 let paginaAtual = 1;
@@ -170,6 +171,7 @@ function lerPosicao(){
 }
 
 async function abrirLivro(){
+  localStorage.setItem(VIEW_KEY,"leitor");
   document.getElementById("biblioteca").style.display="none";
   document.getElementById("leitor").style.display="block";
   document.getElementById("controls").style.display="flex";
@@ -325,6 +327,7 @@ async function paginaAnterior(){
 }
 
 function voltarBiblioteca(){
+  localStorage.setItem(VIEW_KEY,"biblioteca");
   renderToken++;
   document.getElementById("leitor").style.display="none";
   document.getElementById("biblioteca").style.display="block";
@@ -348,10 +351,11 @@ window.addEventListener("resize",()=>{
   }
 });
 
-// Se o usuário recarregar enquanto estava lendo, volta direto para o livro
-// e para a última página salva.
+// Mantém a tela em que o usuário estava quando recarregou:
+// - se estava lendo, reabre o livro na última página salva;
+// - se voltou para a biblioteca, continua na biblioteca.
 window.addEventListener("load",()=>{
-  if(localStorage.getItem(STORAGE_KEY)){
+  if(localStorage.getItem(VIEW_KEY)==="leitor"){
     abrirLivro();
   }
 });
