@@ -185,7 +185,11 @@ function lerPosicao(){
 }
 
 async function abrirLivro(){
+  // Primeiro recupera a última página salva; só depois muda a tela para o leitor.
+  // Isso evita que uma recarga sobrescreva a posição com a página 1.
+  const salvaAntesDeAbrir = lerPosicao();
   salvarEstado("leitor");
+  paginaAtual = salvaAntesDeAbrir;
   document.getElementById("biblioteca").style.display="none";
   document.getElementById("leitor").style.display="block";
   document.getElementById("controls").style.display="flex";
@@ -208,8 +212,7 @@ async function abrirLivro(){
     }).promise;
 
     carregado = true;
-    const salva = lerPosicao();
-    paginaAtual = Math.min(salva, pdf.numPages);
+    paginaAtual = Math.min(salvaAntesDeAbrir, pdf.numPages);
     await renderPagina(paginaAtual);
   }catch(e){
     console.error(e);
