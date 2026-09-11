@@ -122,7 +122,7 @@ body.modo-tela-cheia #pagina{padding-top:4px}
   <div class="reader-top">
     <button class="icon-btn" onclick="voltarBiblioteca()" title="Biblioteca">←</button>
     <div class="reader-title">O Rei Sem Rosto</div>
-    <button class="icon-btn" onclick="toggleFullscreen()" title="Tela cheia">⛶</button>
+    <button class="icon-btn" onclick="toggleCinema()" title="Modo cinema">⛶</button>
   </div>
 
   <div id="pagina">
@@ -334,9 +334,8 @@ function voltarBiblioteca(){
   // A posição continua salva para quando o usuário abrir o livro novamente.
 }
 
-function toggleFullscreen(){
-  // Modo imersivo dentro da página: não usa a API de tela cheia do Android,
-  // evitando a mensagem do sistema que cobre os controles.
+function toggleCinema(){
+  // Não usa a API de tela cheia do celular. Apenas amplia o leitor dentro da página.
   document.body.classList.toggle("modo-tela-cheia");
   const btn=document.querySelector('.reader-top .icon-btn:last-child');
   if(btn) btn.textContent=document.body.classList.contains("modo-tela-cheia") ? "✕" : "⛶";
