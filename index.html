@@ -62,6 +62,25 @@ main{max-width:1100px;margin:auto;padding:14px}
   box-shadow:0 10px 35px #000b;max-width:calc(100vw - 20px)
 }
 .controls button{min-width:46px;height:44px;padding:0}
+.side-nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  z-index:1100;width:54px;height:72px;border:1px solid #34343d;
+  border-radius:18px;background:#15151bd9;color:#fff;font-size:44px;
+  line-height:1;display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(14px);box-shadow:0 8px 28px #0009;
+  -webkit-tap-highlight-color:transparent;
+}
+.side-prev{left:10px}
+.side-next{right:10px}
+body.modo-tela-cheia .side-nav{display:flex}
+body.modo-tela-cheia .header{display:none}
+body.modo-tela-cheia main{padding:0}
+body.modo-tela-cheia .reader-top{top:0}
+body.modo-tela-cheia #pagina{padding-top:4px}
+@media(max-width:480px){
+  .side-nav{width:46px;height:64px;font-size:38px}
+  .side-prev{left:7px}.side-next{right:7px}
+}
 #pageInfo{min-width:82px;text-align:center;font-size:12px;color:#ddd}
 .progress{
   position:fixed;left:0;bottom:0;height:3px;background:#fff;
@@ -114,6 +133,9 @@ main{max-width:1100px;margin:auto;padding:14px}
   <div id="erro"></div>
 </section>
 </main>
+
+<button class="side-nav side-prev" id="sidePrev" onclick="paginaAnterior()" aria-label="Página anterior">‹</button>
+<button class="side-nav side-next" id="sideNext" onclick="proximaPagina()" aria-label="Próxima página">›</button>
 
 <div class="controls" id="controls" style="display:none">
   <button id="prev" onclick="paginaAnterior()">←</button>
@@ -280,8 +302,12 @@ function atualizarUI(){
   const total=pdf ? pdf.numPages : TOTAL_FALLBACK;
   document.getElementById("pageInfo").textContent =
     paginaAtual+" / "+total;
-  document.getElementById("prev").disabled=paginaAtual<=1;
-  document.getElementById("next").disabled=paginaAtual>=total;
+  const atStart = paginaAtual<=1;
+  const atEnd = paginaAtual>=total;
+  document.getElementById("prev").disabled=atStart;
+  document.getElementById("next").disabled=atEnd;
+  document.getElementById("sidePrev").disabled=atStart;
+  document.getElementById("sideNext").disabled=atEnd;
   document.getElementById("progress").style.width =
     ((paginaAtual/total)*100)+"%";
 }
@@ -309,12 +335,11 @@ function voltarBiblioteca(){
 }
 
 function toggleFullscreen(){
-  const el=document.documentElement;
-  if(!document.fullscreenElement){
-    if(el.requestFullscreen) el.requestFullscreen();
-  }else{
-    document.exitFullscreen();
-  }
+  // Modo imersivo dentro da página: não usa a API de tela cheia do Android,
+  // evitando a mensagem do sistema que cobre os controles.
+  document.body.classList.toggle("modo-tela-cheia");
+  const btn=document.querySelector('.reader-top .icon-btn:last-child');
+  if(btn) btn.textContent=document.body.classList.contains("modo-tela-cheia") ? "✕" : "⛶";
 }
 
 window.addEventListener("resize",()=>{
