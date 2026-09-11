@@ -58,6 +58,18 @@ main{max-width:1100px;margin:auto;padding:14px}
   <div id="erro"></div>
 </section>
 
+<section id="loginRecovery" class="admin hidden">
+  <h3>🔐 Recuperar acesso</h3>
+  <div class="muted" style="margin:6px 0 12px">Digite seu e-mail para receber um link de redefinição de senha.</div>
+  <div class="form"><input id="recoveryEmail" type="email" placeholder="E-mail do administrador"><button style="width:100%" onclick="enviarRecuperacao()">📧 Enviar link de recuperação</button></div>
+</section>
+
+<section id="newPasswordArea" class="admin hidden">
+  <h3>🔑 Criar nova senha</h3>
+  <div class="muted" style="margin:6px 0 12px">Digite uma nova senha para sua conta de administrador.</div>
+  <div class="form"><input id="newPassword" type="password" placeholder="Nova senha"><input id="newPassword2" type="password" placeholder="Repita a nova senha"><button style="width:100%" onclick="salvarNovaSenha()">💾 Salvar nova senha</button></div>
+</section>
+
 <section id="adminArea" class="admin hidden">
   <div class="admin-head"><div><h3>⚙️ Área do administrador</h3><div id="adminEmail" class="muted"></div></div><button onclick="sair()">Sair</button></div>
   <div class="tabs"><button onclick="mostrarLivros()">📚 Livros</button><button onclick="mostrarCapitulos()">📖 Capítulos</button></div>
@@ -91,11 +103,55 @@ async function abrirAdmin(){
   const email=prompt("E-mail do administrador:");
   if(!email)return;
   const senha=prompt("Senha:");
-  if(!senha)return;
+  if(!senha){
+    if(confirm("Esqueceu a senha? Quer receber um link para criar uma nova senha?")){
+      const emailRec=prompt("E-mail do administrador:",email);
+      if(emailRec) await enviarRecuperacao(emailRec);
+    }
+    return;
+  }
   const {data,error}=await sb.auth.signInWithPassword({email,password:senha});
   if(error){alert("Não foi possível entrar: "+error.message);return}
   currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros();
 }
+async function enviarRecuperacao(emailArg){
+  const email=(emailArg||document.getElementById("recoveryEmail")?.value||"").trim();
+  if(!email){alert("Digite seu e-mail.");return}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname});
+  if(error){alert("Não foi possível enviar o e-mail: "+error.message);return}
+  alert("E-mail de recuperação enviado. Abra o novo link e crie sua nova senha.");
+  document.getElementById("loginRecovery")?.classList.add("hidden");
+}
+
+function mostrarRecuperacao(){
+  document.getElementById("loginRecovery")?.classList.remove("hidden");
+  document.getElementById("newPasswordArea")?.classList.add("hidden");
+  document.getElementById("adminArea")?.classList.add("hidden");
+}
+
+async function salvarNovaSenha(){
+  const p=document.getElementById("newPassword").value;
+  const p2=document.getElementById("newPassword2").value;
+  if(!p || p.length<6){alert("Use uma senha com pelo menos 6 caracteres.");return}
+  if(p!==p2){alert("As senhas não são iguais.");return}
+  const {error}=await sb.auth.updateUser({password:p});
+  if(error){alert("Não foi possível alterar a senha: "+error.message);return}
+  alert("Senha alterada com sucesso!");
+  document.getElementById("newPasswordArea").classList.add("hidden");
+  await sb.auth.signOut();
+  currentUser=null;
+}
+
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==="PASSWORD_RECOVERY"){
+    document.getElementById("biblioteca")?.classList.remove("hidden");
+    document.getElementById("leitor")?.classList.add("hidden");
+    document.getElementById("loginRecovery")?.classList.add("hidden");
+    document.getElementById("newPasswordArea")?.classList.remove("hidden");
+    document.getElementById("adminArea")?.classList.add("hidden");
+  }
+});
+
 function sair(){sb.auth.signOut();currentUser=null;document.getElementById("adminArea").classList.add("hidden")}
 
 async function mostrarLivros(){
