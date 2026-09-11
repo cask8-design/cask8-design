@@ -149,7 +149,8 @@ body.modo-tela-cheia #pagina{padding-top:4px}
 <script>
 const PDF_URL = "O-Rei-Sem-Rosto.pdf";
 const TOTAL_FALLBACK = 63;
-const STORAGE_KEY = "orei_sem_rosto_estado_v3";
+const STORAGE_KEY = "orei_sem_rosto_estado_v4";
+const VIEW_KEY = "orei_sem_rosto_tela_v1";
 
 let pdf = null;
 let paginaAtual = 1;
@@ -160,7 +161,9 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 function salvarEstado(view){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({view:view, pagina:paginaAtual}));
+  const estado={view:view, pagina:paginaAtual};
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+  sessionStorage.setItem(VIEW_KEY, view);
 }
 function salvarPosicao(){
   salvarEstado("leitor");
@@ -169,6 +172,9 @@ function salvarPosicao(){
 function lerEstado(){
   try{
     const e=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+    const sess=sessionStorage.getItem(VIEW_KEY);
+    if(sess==="biblioteca") return {view:"biblioteca", pagina:e?.pagina||1};
+    if(sess==="leitor") return {view:"leitor", pagina:e?.pagina||1};
     return e && (e.view==="leitor" || e.view==="biblioteca") ? e : {view:"biblioteca",pagina:1};
   }catch(_){ return {view:"biblioteca",pagina:1}; }
 }
@@ -364,14 +370,27 @@ window.addEventListener("resize",()=>{
 // - se voltou para a biblioteca, continua na biblioteca.
 window.addEventListener("load",()=>{
   const estado=lerEstado();
+  // Na primeira abertura desta versão, a tela padrão é a Biblioteca.
+  if(!sessionStorage.getItem(VIEW_KEY)){
+    sessionStorage.setItem(VIEW_KEY, estado.view);
+  }
   if(estado.view==="leitor") abrirLivro();
+  else {
+    document.getElementById("biblioteca").style.display="block";
+    document.getElementById("leitor").style.display="none";
+    document.getElementById("controls").style.display="none";
+  }
 });
 
 // Garante que atualizar/fechar a página preserve exatamente a tela atual.
-window.addEventListener("pagehide",()=>{
+function preservarTelaAtual(){
   const leitorVisivel=document.getElementById("leitor").style.display!=="none";
-  salvarEstado(leitorVisivel ? "leitor" : "biblioteca");
-});
+  const view=leitorVisivel ? "leitor" : "biblioteca";
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({view:view, pagina:paginaAtual}));
+  sessionStorage.setItem(VIEW_KEY, view);
+}
+window.addEventListener("beforeunload", preservarTelaAtual);
+window.addEventListener("pagehide", preservarTelaAtual);
 </script>
 </body>
 </html>
