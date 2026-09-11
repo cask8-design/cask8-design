@@ -2,653 +2,192 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>O Rei Sem Rosto — Minha Biblioteca</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Minha Biblioteca — O Rei Sem Rosto</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#08080b;color:#fff;font-family:Arial,Helvetica,sans-serif}
 body{overflow-x:hidden}
-button{
-  border:0;border-radius:14px;padding:12px 16px;
-  background:#fff;color:#111;font-weight:700;font-size:14px;
-  cursor:pointer;transition:.15s;box-shadow:0 4px 18px #0007
-}
-button:active{transform:scale(.96)}
-button:disabled{opacity:.35}
-.header{
-  text-align:center;padding:18px 14px 12px;
-  background:linear-gradient(180deg,#15151b,#0a0a0d);
-  position:sticky;top:0;z-index:20;border-bottom:1px solid #24242b
-}
-.header h1{margin:0;font-size:21px}
-.header p{margin:5px 0 0;color:#92929d;font-size:12px}
+button{border:0;border-radius:14px;padding:11px 15px;background:#fff;color:#111;font-weight:700;font-size:14px;cursor:pointer}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.45}
+.header{text-align:center;padding:16px 12px 11px;background:linear-gradient(180deg,#15151b,#0a0a0d);border-bottom:1px solid #24242b}
+.header h1{margin:0;font-size:20px}.header p{margin:4px 0 0;color:#888;font-size:11px}
 main{max-width:1100px;margin:auto;padding:14px}
-#biblioteca{display:block}
-.card{
-  max-width:330px;margin:20px auto;background:#121217;
-  border:1px solid #292931;border-radius:20px;padding:14px;
-  box-shadow:0 12px 35px #0008;text-align:center
-}
-.cover{
-  width:100%;aspect-ratio:2/3;overflow:hidden;border-radius:13px;
-  background:#1d1d23
-}
-.cover img{width:100%;height:100%;object-fit:cover}
-.card h2{font-size:21px;margin:15px 0 6px}
-.card p{color:#9999a3;margin:0 0 14px}
+.card,.admin{background:#121217;border:1px solid #292931;border-radius:18px;box-shadow:0 12px 35px #0008}
+.card{max-width:330px;margin:18px auto;padding:12px;text-align:center}
+.cover{width:100%;aspect-ratio:2/3;overflow:hidden;border-radius:12px;background:#1d1d23}
+.cover img{width:100%;height:100%;object-fit:cover}.card h2{font-size:20px;margin:13px 0 5px}.card p{color:#999;margin:0 0 13px;font-size:13px}
 .primary{background:#fff;color:#111}
-#leitor{display:none}
-.reader-top{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  position:sticky;top:68px;z-index:15;padding:8px 0;
-  background:#08080bee;backdrop-filter:blur(12px)
-}
-.reader-title{font-weight:700;text-align:center;flex:1;font-size:14px}
-.icon-btn{width:44px;height:42px;padding:0;font-size:19px}
-#pagina{
-  width:100%;display:flex;justify-content:center;align-items:flex-start;
-  padding:8px 0 95px;min-height:65vh
-}
-#pageCanvas{
-  display:block;max-width:100%;height:auto;
-  border-radius:4px;box-shadow:0 10px 40px #0009;
-  background:#0b0b0e
-}
-.controls{
-  position:fixed;left:50%;bottom:12px;transform:translateX(-50%);
-  z-index:30;display:flex;align-items:center;gap:8px;
-  padding:8px;background:#15151bd9;border:1px solid #34343d;
-  border-radius:18px;backdrop-filter:blur(14px);
-  box-shadow:0 10px 35px #000b;max-width:calc(100vw - 20px)
-}
-.controls button{min-width:46px;height:44px;padding:0}
-.side-nav{
-  position:fixed;top:50%;transform:translateY(-50%);
-  z-index:1100;width:54px;height:72px;border:1px solid #34343d;
-  border-radius:18px;background:#15151bd9;color:#fff;font-size:44px;
-  line-height:1;display:none;align-items:center;justify-content:center;
-  backdrop-filter:blur(14px);box-shadow:0 8px 28px #0009;
-  -webkit-tap-highlight-color:transparent;
-}
-.side-prev{left:10px}
-.side-next{right:10px}
-body.modo-tela-cheia .side-nav{display:flex}
-body.modo-tela-cheia .header{display:none}
-body.modo-tela-cheia main{padding:0}
-body.modo-tela-cheia .reader-top{top:0}
-body.modo-tela-cheia #pagina{padding-top:4px}
-@media(max-width:480px){
-  .side-nav{width:46px;height:64px;font-size:38px}
-  .side-prev{left:7px}.side-next{right:7px}
-}
-#pageInfo{min-width:82px;text-align:center;font-size:12px;color:#ddd}
-.progress{
-  position:fixed;left:0;bottom:0;height:3px;background:#fff;
-  z-index:40;width:0%;transition:width .2s
-}
-.loading{
-  min-height:60vh;display:flex;align-items:center;justify-content:center;
-  color:#aaa;font-size:14px;text-align:center;padding:30px
-}
-#erro{display:none;color:#ffb4b4;text-align:center;padding:30px}
-.small{font-size:11px;color:#777;text-align:center;margin-top:10px}
-@media(min-width:700px){
-  main{padding:20px}
-  #pagina{padding-bottom:110px}
-  #pageCanvas{max-height:calc(100vh - 150px);width:auto;max-width:92vw}
-}
+#leitor{display:none}.reader-top{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:15;padding:7px 0;background:#08080bee;backdrop-filter:blur(12px)}
+.reader-title{font-weight:700;text-align:center;flex:1;font-size:14px}.icon-btn{width:44px;height:42px;padding:0;font-size:19px}
+#pagina{width:100%;display:flex;justify-content:center;align-items:flex-start;padding:8px 0 92px;min-height:65vh}
+#pageCanvas{display:block;max-width:100%;height:auto;border-radius:4px;box-shadow:0 10px 40px #0009;background:#fff}
+.controls{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:8px;padding:8px;background:#15151bd9;border:1px solid #34343d;border-radius:18px;backdrop-filter:blur(14px);box-shadow:0 10px 35px #000b;max-width:calc(100vw - 20px)}
+.controls button{min-width:46px;height:44px;padding:0}.side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:25;width:50px;height:68px;border:1px solid #34343d;border-radius:18px;background:#15151bd9;color:#fff;font-size:40px;display:none}
+.side-prev{left:8px}.side-next{right:8px}.modo .side-nav{display:flex;align-items:center;justify-content:center}.modo .header{display:none}.modo main{padding:0}.modo .reader-top{top:0}
+#pageInfo{min-width:78px;text-align:center;font-size:12px;color:#ddd}.progress{position:fixed;left:0;bottom:0;height:3px;background:#fff;z-index:40;width:0}
+.loading{min-height:55vh;display:flex;align-items:center;justify-content:center;color:#aaa;text-align:center;padding:25px}#erro{display:none;color:#ffb4b4;text-align:center;padding:25px}
+.admin{max-width:540px;margin:28px auto;padding:14px}.admin-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.admin h3{margin:0 0 3px;font-size:17px}.muted{color:#8c8c96;font-size:11px}
+.tabs{display:flex;gap:7px;margin:12px 0}.tabs button{flex:1;padding:10px 8px}
+.form{border:1px solid #292931;border-radius:13px;padding:10px;margin-top:10px}.form input,.form select,.form textarea{width:100%;background:#09090d;color:#fff;border:1px solid #2b2b33;border-radius:9px;padding:11px;margin-bottom:8px;outline:none}.form textarea{min-height:80px;resize:vertical}.list-item{border:1px solid #292931;border-radius:12px;padding:10px;margin-top:9px}.row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.row button{font-size:12px;padding:8px 11px}.status{text-align:center;color:#8fe0a4;font-size:12px;margin:8px}.error{text-align:center;color:#ff9b9b;font-size:12px;margin:8px}
+.hidden{display:none!important}
+@media(min-width:700px){main{padding:20px}#pageCanvas{max-height:calc(100vh - 140px);width:auto;max-width:92vw}}
 </style>
 </head>
 <body>
-
-<header class="header">
-  <h1>📚 Minha Biblioteca</h1>
-  <p>O Rei Sem Rosto</p>
-</header>
+<header class="header"><h1>📚 Minha Biblioteca</h1><p>O Rei Sem Rosto</p></header>
 
 <main>
 <section id="biblioteca">
-  <div style="max-width:330px;margin:12px auto 0;text-align:center">
-    <button id="adminBtn" class="primary" onclick="abrirAdmin()" style="display:none;width:100%">🔐 Área do administrador</button>
-    <button id="loginBtn" onclick="abrirLogin()" style="display:block;width:100%;margin-top:10px;background:#1b1b22;color:#fff;border:1px solid #34343d">Entrar como administrador</button>
-  </div>
-  <div class="card">
-    <div class="cover">
-      <img src="Screenshot_20260909-190353~3.jpg" alt="Capa de O Rei Sem Rosto">
-    </div>
-    <h2>O Rei Sem Rosto</h2>
-    <p>Livro completo — 63 páginas.</p>
+  <div id="bookCard" class="card">
+    <div class="cover"><img src="Screenshot_20260909-190353~3.jpg" alt="Capa de O Rei Sem Rosto"></div>
+    <h2>O Rei Sem Rosto</h2><p>Livro completo — 63 páginas.</p>
     <button class="primary" onclick="abrirLivro()">▶ Ler livro</button>
   </div>
 </section>
 
 <section id="leitor">
   <div class="reader-top">
-    <button class="icon-btn" onclick="voltarBiblioteca()" title="Biblioteca">←</button>
+    <button class="icon-btn" onclick="voltarBiblioteca()">←</button>
     <div class="reader-title">O Rei Sem Rosto</div>
-    <button class="icon-btn" onclick="toggleCinema()" title="Modo cinema">⛶</button>
+    <button class="icon-btn" onclick="toggleModo()">⛶</button>
   </div>
-
-  <div id="pagina">
-    <div class="loading" id="loading">Carregando livro...<br>Isso pode levar alguns segundos na primeira vez.</div>
-    <canvas id="pageCanvas" style="display:none"></canvas>
-  </div>
-
+  <div id="pagina"><div class="loading" id="loading">Carregando livro...<br>Isso pode levar alguns segundos.</div><canvas id="pageCanvas" style="display:none"></canvas></div>
   <div id="erro"></div>
+</section>
+
+<section id="adminArea" class="admin hidden">
+  <div class="admin-head"><div><h3>⚙️ Área do administrador</h3><div id="adminEmail" class="muted"></div></div><button onclick="sair()">Sair</button></div>
+  <div class="tabs"><button onclick="mostrarLivros()">📚 Livros</button><button onclick="mostrarCapitulos()">📖 Capítulos</button></div>
+  <div id="adminStatus" class="status"></div><div id="adminError" class="error"></div>
+  <div id="adminContent"></div>
 </section>
 </main>
 
-<!-- Login -->
-<div id="loginModal" style="display:none;position:fixed;inset:0;background:#000b;z-index:2000;padding:20px;align-items:center;justify-content:center">
-  <div style="width:min(420px,100%);background:#15151b;border:1px solid #34343d;border-radius:20px;padding:22px;box-shadow:0 20px 60px #000">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <h2 style="margin:0;font-size:20px">🔐 Administrador</h2>
-      <button onclick="fecharLogin()" style="width:42px;height:42px;padding:0">✕</button>
-    </div>
-    <p style="color:#999;margin:10px 0 18px;font-size:13px">Entre com o e-mail e a senha do usuário administrador criado no Supabase.</p>
-    <input id="loginEmail" type="email" placeholder="E-mail" autocomplete="username"
-      style="width:100%;padding:14px;border-radius:12px;border:1px solid #34343d;background:#0d0d11;color:#fff;font-size:15px;margin-bottom:10px">
-    <input id="loginPassword" type="password" placeholder="Senha" autocomplete="current-password"
-      style="width:100%;padding:14px;border-radius:12px;border:1px solid #34343d;background:#0d0d11;color:#fff;font-size:15px">
-    <button onclick="entrarAdmin()" style="width:100%;margin-top:14px;background:#fff;color:#111">Entrar</button>
-    <div id="loginMsg" style="min-height:20px;margin-top:12px;text-align:center;color:#ffb4b4;font-size:13px"></div>
-  </div>
-</div>
-
-<!-- Área protegida -->
-<section id="adminArea" style="display:none;max-width:760px;margin:20px auto;padding:20px;background:#121217;border:1px solid #292931;border-radius:20px">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-    <div>
-      <h2 style="margin:0">⚙️ Área do administrador</h2>
-      <p id="adminEmail" style="margin:6px 0 0;color:#999;font-size:13px"></p>
-    </div>
-    <button onclick="sairAdmin()">Sair</button>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px">
-    <button onclick="carregarLivrosAdmin()" style="width:100%">📚 Livros</button>
-    <button onclick="carregarCapitulosAdmin()" style="width:100%">📖 Capítulos</button>
-  </div>
-
-  <div id="adminMsg" style="min-height:20px;margin:14px 0;text-align:center;color:#9fe6b8;font-size:13px"></div>
-
-  <div id="livrosAdmin" style="display:none">
-    <h3>📚 Gerenciar livros</h3>
-    <div style="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px">
-      <input id="novoLivroTitulo" type="text" placeholder="Título do novo livro"
-        style="width:100%;padding:13px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff">
-      <button onclick="adicionarLivro()" style="width:100%;margin-top:10px;background:#fff;color:#111">+ Adicionar livro</button>
-    </div>
-    <div id="listaLivrosAdmin" style="margin-top:14px"></div>
-  </div>
-
-  <div id="capitulosAdmin" style="display:none">
-    <h3>📖 Gerenciar capítulos</h3>
-    <div style="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px">
-      <select id="capLivro" style="width:100%;padding:13px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff"></select>
-      <input id="capNumero" type="number" min="1" placeholder="Número do capítulo"
-        style="width:100%;padding:13px;margin-top:10px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff">
-      <input id="capTitulo" type="text" placeholder="Título do capítulo"
-        style="width:100%;padding:13px;margin-top:10px;border-radius:10px;border:1px solid #34343d;background:#0d0d11;color:#fff">
-      <button onclick="adicionarCapitulo()" style="width:100%;margin-top:10px;background:#fff;color:#111">+ Adicionar capítulo</button>
-    </div>
-    <div id="listaCapitulosAdmin" style="margin-top:14px"></div>
-  </div>
-</section>
-
-<button class="side-nav side-prev" id="sidePrev" onclick="paginaAnterior()" aria-label="Página anterior">‹</button>
-<button class="side-nav side-next" id="sideNext" onclick="proximaPagina()" aria-label="Próxima página">›</button>
-
-<div class="controls" id="controls" style="display:none">
-  <button id="prev" onclick="paginaAnterior()">←</button>
-  <div id="pageInfo">1 / 63</div>
-  <button id="next" onclick="proximaPagina()">→</button>
-  <button onclick="salvarPosicao()" title="Salvar posição">🔖</button>
-</div>
-<div class="progress" id="progress"></div>
+<div id="controls" class="controls" style="display:none"><button onclick="paginaAnterior()">←</button><div id="pageInfo">1 / 63</div><button onclick="proximaPagina()">→</button><button onclick="salvarPosicao()" title="Salvar posição">🔖</button></div>
+<button class="side-nav side-prev" onclick="paginaAnterior()">‹</button><button class="side-nav side-next" onclick="proximaPagina()">›</button>
+<div id="progress" class="progress"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-const SUPABASE_URL = "https://fftvitfjhsatblgxvalv.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_BJVioT8Oluxs2G97HcijnQ_P_s0PdOI";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const SUPABASE_URL="https://fftvitfjhsatblgxvalv.supabase.co";
+const SUPABASE_KEY="sb_publishable_BJVioT8Oluxs2G97HcijnQ_P_s0PdOI";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-function abrirLogin(){
-  document.getElementById("loginModal").style.display="flex";
-  document.getElementById("loginMsg").textContent="";
-}
-function fecharLogin(){
-  document.getElementById("loginModal").style.display="none";
-}
-async function entrarAdmin(){
-  const email=document.getElementById("loginEmail").value.trim();
-  const password=document.getElementById("loginPassword").value;
-  const msg=document.getElementById("loginMsg");
-  msg.textContent="";
-  if(!email || !password){
-    msg.textContent="Preencha o e-mail e a senha.";
-    return;
-  }
-  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){
-    msg.textContent="E-mail ou senha incorretos.";
-    return;
-  }
-  fecharLogin();
-  mostrarAdmin();
-}
-async function mostrarAdmin(){
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  const logado=!!session;
-  document.getElementById("adminBtn").style.display=logado?"block":"none";
-  document.getElementById("loginBtn").style.display=logado?"none":"block";
-  if(logado){
-    document.getElementById("adminArea").style.display="block";
-    document.getElementById("adminEmail").textContent=session.user.email || "";
-  }else{
-    document.getElementById("adminArea").style.display="none";
-  }
-}
+const PDF_URL="O-Rei-Sem-Rosto.pdf", STORAGE_KEY="orei_sem_rosto_estado_v5", VIEW_KEY="orei_sem_rosto_view_v5";
+let pdf=null,paginaAtual=1,carregado=false,renderToken=0,currentUser=null,books=[];
 
-async function adminSeguro(){
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  return session;
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+function setStatus(t){document.getElementById("adminStatus").textContent=t||"";document.getElementById("adminError").textContent=""}
+function setError(t){document.getElementById("adminError").textContent=t||"";document.getElementById("adminStatus").textContent=""}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+
+async function abrirAdmin(){
+  if(currentUser){document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros();return}
+  const email=prompt("E-mail do administrador:");
+  if(!email)return;
+  const senha=prompt("Senha:");
+  if(!senha)return;
+  const {data,error}=await sb.auth.signInWithPassword({email,senha});
+  if(error){alert("Não foi possível entrar: "+error.message);return}
+  currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros();
 }
-function adminMensagem(text, erro=false){
-  const el=document.getElementById("adminMsg");
-  el.textContent=text||"";
-  el.style.color=erro?"#ffb4b4":"#9fe6b8";
-}
-function mostrarPainelAdmin(nome){
-  document.getElementById("livrosAdmin").style.display=nome==="livros"?"block":"none";
-  document.getElementById("capitulosAdmin").style.display=nome==="capitulos"?"block":"none";
-}
-async function carregarLivrosAdmin(){
-  if(!(await adminSeguro())) return;
-  mostrarPainelAdmin("livros");
-  adminMensagem("Carregando livros...");
-  const {data,error}=await supabaseClient.from("Livros").select("*").order("id",{ascending:true});
-  if(error){ adminMensagem("Não foi possível carregar os livros: "+error.message,true); return; }
-  const box=document.getElementById("listaLivrosAdmin");
-  box.innerHTML="";
-  const select=document.getElementById("capLivro");
-  select.innerHTML="";
-  if(!data.length){
-    box.innerHTML='<p style="color:#999">Nenhum livro cadastrado.</p>';
-    adminMensagem("");
-    return;
-  }
-  data.forEach(l=>{
-    const titulo=l.title ?? l.titulo ?? l.nome ?? "Livro sem título";
-    const id=l.id;
-    const row=document.createElement("div");
-    row.style.cssText="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px;margin-bottom:10px";
-    row.innerHTML=`<strong>${escapeHtml(titulo)}</strong><div style="color:#888;font-size:12px;margin-top:5px">ID: ${escapeHtml(String(id))}</div>
-      <button onclick="editarLivro(${JSON.stringify(id)})" style="margin-top:10px">✏️ Editar título</button>
-      <button onclick="excluirLivro(${JSON.stringify(id)})" style="margin-top:10px;margin-left:6px">🗑️ Excluir</button>`;
-    box.appendChild(row);
-    const opt=document.createElement("option");
-    opt.value=id; opt.textContent=titulo;
-    select.appendChild(opt);
-  });
-  adminMensagem("Livros carregados.");
+function sair(){sb.auth.signOut();currentUser=null;document.getElementById("adminArea").classList.add("hidden")}
+
+async function mostrarLivros(){
+  setStatus("Carregando livros...");
+  const {data,error}=await sb.from("Livros").select("*").order("id",{ascending:true});
+  if(error){setError("Erro ao carregar livros: "+error.message);return}
+  books=data||[];setStatus("Livros carregados.");
+  let html='<div class="form"><input id="novoLivro" placeholder="Título do novo livro"><button style="width:100%" onclick="adicionarLivro()">+ Adicionar livro</button></div><h4>📚 Gerenciar livros</h4>';
+  if(!books.length)html+='<div class="muted">Nenhum livro cadastrado.</div>';
+  for(const b of books)html+=`<div class="list-item"><b>${esc(b.title??b.titulo??"Sem título")}</b><div class="muted">ID: ${b.id}</div><div class="row"><button onclick="editarLivro(${b.id})">✏️ Editar título</button><button onclick="excluirLivro(${b.id})">🗑️ Excluir</button></div></div>`;
+  document.getElementById("adminContent").innerHTML=html;
 }
 async function adicionarLivro(){
-  if(!(await adminSeguro())) return;
-  const titulo=document.getElementById("novoLivroTitulo").value.trim();
-  if(!titulo){ adminMensagem("Digite o título do livro.",true); return; }
-  const {error}=await supabaseClient.from("Livros").insert({title:titulo});
-  if(error){ adminMensagem("Erro ao adicionar: "+error.message,true); return; }
-  document.getElementById("novoLivroTitulo").value="";
-  await carregarLivrosAdmin();
-  adminMensagem("Livro adicionado com sucesso!");
+  const title=document.getElementById("novoLivro").value.trim();if(!title)return;
+  const {error}=await sb.from("Livros").insert({title});
+  if(error){setError("Erro ao adicionar livro: "+error.message);return}
+  setStatus("Livro adicionado.");mostrarLivros();
 }
 async function editarLivro(id){
-  const titulo=prompt("Novo título do livro:");
-  if(titulo===null) return;
-  const valor=titulo.trim();
-  if(!valor){ adminMensagem("O título não pode ficar vazio.",true); return; }
-  const {error}=await supabaseClient.from("Livros").update({title:valor}).eq("id",id);
-  if(error){ adminMensagem("Erro ao editar: "+error.message,true); return; }
-  await carregarLivrosAdmin();
-  adminMensagem("Livro atualizado!");
+  const b=books.find(x=>x.id===id);const novo=prompt("Novo título:",b?.title??b?.titulo??"");if(!novo)return;
+  const {error}=await sb.from("Livros").update({title:novo}).eq("id",id);
+  if(error){setError("Erro ao editar livro: "+error.message);return}mostrarLivros();
 }
 async function excluirLivro(id){
-  if(!confirm("Excluir este livro? Os capítulos relacionados podem continuar existindo.")) return;
-  const {error}=await supabaseClient.from("Livros").delete().eq("id",id);
-  if(error){ adminMensagem("Erro ao excluir: "+error.message,true); return; }
-  await carregarLivrosAdmin();
-  adminMensagem("Livro excluído.");
+  if(!confirm("Excluir este livro?"))return;
+  const {error}=await sb.from("Livros").delete().eq("id",id);
+  if(error){setError("Erro ao excluir livro: "+error.message);return}mostrarLivros();
 }
-async function carregarCapitulosAdmin(){
-  if(!(await adminSeguro())) return;
-  mostrarPainelAdmin("capitulos");
-  adminMensagem("Carregando capítulos...");
-  const [livros, caps]=await Promise.all([
-    supabaseClient.from("Livros").select("*").order("id",{ascending:true}),
-    supabaseClient.from("capitulos").select("*").order("livro_id",{ascending:true}).order("numero",{ascending:true})
-  ]);
-  if(livros.error){ adminMensagem("Erro ao carregar livros: "+livros.error.message,true); return; }
-  if(caps.error){ adminMensagem("Erro ao carregar capítulos: "+caps.error.message,true); return; }
-  const select=document.getElementById("capLivro");
-  select.innerHTML="";
-  const nomes={};
-  (livros.data||[]).forEach(l=>{
-    const titulo=l.title ?? l.titulo ?? l.nome ?? "Livro sem título";
-    nomes[l.id]=titulo;
-    const opt=document.createElement("option");
-    opt.value=l.id; opt.textContent=titulo;
-    select.appendChild(opt);
-  });
-  const box=document.getElementById("listaCapitulosAdmin");
-  box.innerHTML="";
-  if(!caps.data.length) box.innerHTML='<p style="color:#999">Nenhum capítulo cadastrado.</p>';
-  (caps.data||[]).forEach(c=>{
-    const row=document.createElement("div");
-    row.style.cssText="background:#19191f;border:1px solid #2d2d35;border-radius:14px;padding:14px;margin-bottom:10px";
-    const titulo=c.title ?? c.titulo ?? "Capítulo sem título";
-    row.innerHTML=`<strong>Capítulo ${escapeHtml(String(c.numero))} — ${escapeHtml(titulo)}</strong>
-      <div style="color:#888;font-size:12px;margin-top:5px">${escapeHtml(nomes[c.livro_id]||"Livro")}</div>
-      <button onclick="editarCapitulo(${JSON.stringify(c.id)})" style="margin-top:10px">✏️ Editar</button>
-      <button onclick="excluirCapitulo(${JSON.stringify(c.id)})" style="margin-top:10px;margin-left:6px">🗑️ Excluir</button>`;
-    box.appendChild(row);
-  });
-  adminMensagem("Capítulos carregados.");
+
+async function mostrarCapitulos(){
+  setStatus("Carregando capítulos...");
+  const {data:livros,error:e1}=await sb.from("Livros").select("*").order("id",{ascending:true});
+  if(e1){setError("Erro ao carregar livros: "+e1.message);return}
+  books=livros||[];
+  const {data:chs,error}=await sb.from("capitulos").select("*").order("numero",{ascending:true});
+  if(error){setError("Erro ao carregar capítulos: "+error.message);return}
+  setStatus("Capítulos carregados.");
+  let opts=books.map(b=>`<option value="${b.id}">${esc(b.title??b.titulo??"Sem título")}</option>`).join("");
+  let html=`<div class="form"><select id="capLivro">${opts}</select><input id="capNumero" type="number" placeholder="Número do capítulo"><input id="capTitulo" placeholder="Título do capítulo"><textarea id="capConteudo" placeholder="Conteúdo do capítulo (opcional)"></textarea><button style="width:100%" onclick="adicionarCapitulo()">+ Adicionar capítulo</button></div><h4>📖 Gerenciar capítulos</h4>`;
+  if(!chs.length)html+='<div class="muted">Nenhum capítulo cadastrado.</div>';
+  for(const c of chs){
+    const b=books.find(x=>String(x.id)===String(c.livro_id));
+    html+=`<div class="list-item"><b>Capítulo ${esc(c.numero)} — ${esc(c.title??"Sem título")}</b><div class="muted">${esc(b?.title??"Livro não encontrado")}</div><div class="row"><button onclick="editarCapitulo(${c.id})">✏️ Editar</button><button onclick="excluirCapitulo(${c.id})">🗑️ Excluir</button></div></div>`;
+  }
+  document.getElementById("adminContent").innerHTML=html;
 }
 async function adicionarCapitulo(){
-  if(!(await adminSeguro())) return;
-  const livroId=document.getElementById("capLivro").value;
-  const numero=Number(document.getElementById("capNumero").value);
-  const titulo=document.getElementById("capTitulo").value.trim();
-  if(!livroId || !numero || !titulo){ adminMensagem("Preencha livro, número e título.",true); return; }
-  const {error}=await supabaseClient.from("capitulos").insert({livro_id:Number(livroId),numero,title:titulo});
-  if(error){ adminMensagem("Erro ao adicionar: "+error.message,true); return; }
-  document.getElementById("capNumero").value="";
-  document.getElementById("capTitulo").value="";
-  await carregarCapitulosAdmin();
-  adminMensagem("Capítulo adicionado com sucesso!");
+  const livro_id=Number(document.getElementById("capLivro").value),numero=Number(document.getElementById("capNumero").value),title=document.getElementById("capTitulo").value.trim(),conteudo=document.getElementById("capConteudo").value;
+  if(!livro_id||!numero||!title){setError("Preencha livro, número e título.");return}
+  const {error}=await sb.from("capitulos").insert({livro_id,numero,title,conteudo});
+  if(error){setError("Erro ao adicionar: "+error.message);return}mostrarCapitulos();
 }
 async function editarCapitulo(id){
-  const titulo=prompt("Novo título do capítulo:");
-  if(titulo===null) return;
-  const valor=titulo.trim();
-  if(!valor){ adminMensagem("O título não pode ficar vazio.",true); return; }
-  const {error}=await supabaseClient.from("capitulos").update({title:valor}).eq("id",id);
-  if(error){ adminMensagem("Erro ao editar: "+error.message,true); return; }
-  await carregarCapitulosAdmin();
-  adminMensagem("Capítulo atualizado!");
+  const {data:c,error:e}=await sb.from("capitulos").select("*").eq("id",id).single();if(e){setError(e.message);return}
+  const title=prompt("Título do capítulo:",c.title||"");if(title===null)return;
+  const numero=prompt("Número:",c.numero);if(numero===null)return;
+  const {error}=await sb.from("capitulos").update({title:title.trim(),numero:Number(numero)}).eq("id",id);
+  if(error){setError("Erro ao editar: "+error.message);return}mostrarCapitulos();
 }
 async function excluirCapitulo(id){
-  if(!confirm("Excluir este capítulo?")) return;
-  const {error}=await supabaseClient.from("capitulos").delete().eq("id",id);
-  if(error){ adminMensagem("Erro ao excluir: "+error.message,true); return; }
-  await carregarCapitulosAdmin();
-  adminMensagem("Capítulo excluído.");
-}
-function escapeHtml(v){
-  return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+  if(!confirm("Excluir este capítulo?"))return;
+  const {error}=await sb.from("capitulos").delete().eq("id",id);
+  if(error){setError("Erro ao excluir: "+error.message);return}mostrarCapitulos();
 }
 
-function abrirAdmin(){
-  document.getElementById("adminArea").scrollIntoView({behavior:"smooth"});
+function salvarEstado(view){localStorage.setItem(STORAGE_KEY,JSON.stringify({view,pagina:paginaAtual}));sessionStorage.setItem(VIEW_KEY,view)}
+function lerEstado(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{"view":"biblioteca","pagina":1}')}catch(e){return {view:"biblioteca",pagina:1}}}
+function salvarPosicao(){salvarEstado("leitor")}
+function abrirLivro(){
+  const e=lerEstado();paginaAtual=Number(e.pagina)||1;salvarEstado("leitor");
+  document.getElementById("biblioteca").style.display="none";document.getElementById("leitor").style.display="block";document.getElementById("controls").style.display="flex";window.scrollTo(0,0);
+  if(carregado)return renderPagina(paginaAtual);
+  document.getElementById("loading").style.display="flex";document.getElementById("pageCanvas").style.display="none";
+  pdfjsLib.getDocument(PDF_URL).promise.then(p=>{pdf=p;carregado=true;paginaAtual=Math.min(paginaAtual,p.numPages);renderPagina(paginaAtual)}).catch(()=>{document.getElementById("loading").style.display="none";document.getElementById("erro").style.display="block";document.getElementById("erro").innerHTML="Não foi possível carregar o PDF. Verifique se O-Rei-Sem-Rosto.pdf está no repositório."});
 }
-async function sairAdmin(){
-  await supabaseClient.auth.signOut();
-  mostrarAdmin();
+async function renderPagina(n){
+  if(!pdf)return;n=Math.max(1,Math.min(n,pdf.numPages));paginaAtual=n;const token=++renderToken;
+  const page=await pdf.getPage(n);if(token!==renderToken)return;const base=page.getViewport({scale:1});const scale=Math.min((window.innerWidth-12)/base.width,1100/base.width);const vp=page.getViewport({scale:Math.max(scale,1)});
+  const c=document.getElementById("pageCanvas"),ctx=c.getContext("2d",{alpha:false});c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+  await page.render({canvasContext:ctx,viewport:vp,background:"#fff"}).promise;if(token!==renderToken)return;
+  cortarBordas(c);document.getElementById("loading").style.display="none";c.style.display="block";atualizarUI();salvarPosicao();window.scrollTo({top:0,behavior:"instant"});
 }
-supabaseClient.auth.onAuthStateChange(()=>mostrarAdmin());
-window.addEventListener("load",mostrarAdmin);
-</script>
-
-<script>
-const PDF_URL = "O-Rei-Sem-Rosto.pdf";
-const TOTAL_FALLBACK = 63;
-const STORAGE_KEY = "orei_sem_rosto_estado_v4";
-const VIEW_KEY = "orei_sem_rosto_tela_v1";
-
-let pdf = null;
-let paginaAtual = 1;
-let carregado = false;
-let renderToken = 0;
-
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
-function salvarEstado(view){
-  const estado={view:view, pagina:paginaAtual};
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
-  sessionStorage.setItem(VIEW_KEY, view);
+function cortarBordas(c){
+  const ctx=c.getContext("2d"),w=c.width,h=c.height,data=ctx.getImageData(0,0,w,h).data,step=4;let minX=w,minY=h,maxX=-1,maxY=-1;
+  for(let y=0;y<h;y+=step)for(let x=0;x<w;x+=step){const i=(y*w+x)*4,r=data[i],g=data[i+1],b=data[i+2];if(r<242||g<242||b<242){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y)}}
+  if(maxX<0)return;minX=Math.max(0,minX-3);minY=Math.max(0,minY-3);maxX=Math.min(w-1,maxX+3);maxY=Math.min(h-1,maxY+3);const cw=maxX-minX+1,ch=maxY-minY+1;if(cw<w*.98||ch<h*.98){const t=document.createElement("canvas");t.width=cw;t.height=ch;t.getContext("2d").drawImage(c,minX,minY,cw,ch,0,0,cw,ch);c.width=cw;c.height=ch;ctx.drawImage(t,0,0)}
 }
-function salvarPosicao(){
-  salvarEstado("leitor");
-  atualizarUI();
-}
-function lerEstado(){
-  try{
-    const e=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
-    const sess=sessionStorage.getItem(VIEW_KEY);
-    if(sess==="biblioteca") return {view:"biblioteca", pagina:e?.pagina||1};
-    if(sess==="leitor") return {view:"leitor", pagina:e?.pagina||1};
-    return e && (e.view==="leitor" || e.view==="biblioteca") ? e : {view:"biblioteca",pagina:1};
-  }catch(_){ return {view:"biblioteca",pagina:1}; }
-}
-function lerPosicao(){
-  const e=lerEstado();
-  const n=parseInt(e.pagina||1,10);
-  return Number.isFinite(n)&&n>=1?n:1;
-}
-
-async function abrirLivro(){
-  // Primeiro recupera a última página salva; só depois muda a tela para o leitor.
-  // Isso evita que uma recarga sobrescreva a posição com a página 1.
-  const salvaAntesDeAbrir = lerPosicao();
-  salvarEstado("leitor");
-  paginaAtual = salvaAntesDeAbrir;
-  document.getElementById("biblioteca").style.display="none";
-  document.getElementById("leitor").style.display="block";
-  document.getElementById("controls").style.display="flex";
-  window.scrollTo(0,0);
-
-  if(carregado){
-    renderPagina(paginaAtual);
-    return;
-  }
-
-  document.getElementById("loading").style.display="flex";
-  document.getElementById("pageCanvas").style.display="none";
-  document.getElementById("erro").style.display="none";
-
-  try{
-    pdf = await pdfjsLib.getDocument({
-      url: PDF_URL,
-      disableAutoFetch:false,
-      disableStream:false
-    }).promise;
-
-    carregado = true;
-    paginaAtual = Math.min(salvaAntesDeAbrir, pdf.numPages);
-    await renderPagina(paginaAtual);
-  }catch(e){
-    console.error(e);
-    document.getElementById("loading").style.display="none";
-    const erro=document.getElementById("erro");
-    erro.style.display="block";
-    erro.innerHTML =
-      "Não foi possível carregar o livro.<br><br>" +
-      "Verifique se <b>O-Rei-Sem-Rosto.pdf</b> está no mesmo repositório do site.";
-  }
-}
-
-async function renderPagina(numero){
-  if(!pdf) return;
-  numero=Math.max(1,Math.min(numero,pdf.numPages));
-  paginaAtual=numero;
-  const token=++renderToken;
-
-  document.getElementById("loading").style.display="flex";
-  document.getElementById("pageCanvas").style.display="none";
-
-  try{
-    const page=await pdf.getPage(numero);
-    if(token!==renderToken)return;
-
-    const base=page.getViewport({scale:1});
-    const maxWidth=Math.min(window.innerWidth-12,1100);
-    const scale=maxWidth/base.width;
-    const viewport=page.getViewport({scale:Math.max(scale,1)});
-
-    const canvas=document.getElementById("pageCanvas");
-    const ctx=canvas.getContext("2d",{alpha:false});
-
-    canvas.width=Math.floor(viewport.width);
-    canvas.height=Math.floor(viewport.height);
-
-    await page.render({
-      canvasContext:ctx,
-      viewport:viewport,
-      background:"#ffffff"
-    }).promise;
-
-    if(token!==renderToken)return;
-
-    // Remove automaticamente as grandes bordas brancas do PDF.
-    cortarBordasBrancas(canvas);
-
-    document.getElementById("loading").style.display="none";
-    canvas.style.display="block";
-    atualizarUI();
-    salvarPosicaoSilencioso();
-    window.scrollTo({top:0,behavior:"instant"});
-  }catch(e){
-    console.error(e);
-  }
-}
-
-function cortarBordasBrancas(canvas){
-  const ctx=canvas.getContext("2d");
-  const w=canvas.width,h=canvas.height;
-  const step=4;
-  const data=ctx.getImageData(0,0,w,h).data;
-
-  let minX=w,minY=h,maxX=-1,maxY=-1;
-
-  for(let y=0;y<h;y+=step){
-    for(let x=0;x<w;x+=step){
-      const i=(y*w+x)*4;
-      const r=data[i],g=data[i+1],b=data[i+2];
-      if(r<242 || g<242 || b<242){
-        if(x<minX)minX=x;
-        if(y<minY)minY=y;
-        if(x>maxX)maxX=x;
-        if(y>maxY)maxY=y;
-      }
-    }
-  }
-
-  if(maxX<0)return;
-
-  const pad=3;
-  minX=Math.max(0,minX-pad);
-  minY=Math.max(0,minY-pad);
-  maxX=Math.min(w-1,maxX+pad);
-  maxY=Math.min(h-1,maxY+pad);
-
-  const cw=maxX-minX+1,ch=maxY-minY+1;
-
-  // Só corta se realmente houver uma margem relevante.
-  if(cw < w*0.98 || ch < h*0.98){
-    const temp=document.createElement("canvas");
-    temp.width=cw;temp.height=ch;
-    temp.getContext("2d").drawImage(
-      canvas,minX,minY,cw,ch,0,0,cw,ch
-    );
-    canvas.width=cw;canvas.height=ch;
-    ctx.drawImage(temp,0,0);
-  }
-}
-
-function salvarPosicaoSilencioso(){
-  salvarEstado("leitor");
-}
-
-function atualizarUI(){
-  const total=pdf ? pdf.numPages : TOTAL_FALLBACK;
-  document.getElementById("pageInfo").textContent =
-    paginaAtual+" / "+total;
-  const atStart = paginaAtual<=1;
-  const atEnd = paginaAtual>=total;
-  document.getElementById("prev").disabled=atStart;
-  document.getElementById("next").disabled=atEnd;
-  document.getElementById("sidePrev").disabled=atStart;
-  document.getElementById("sideNext").disabled=atEnd;
-  document.getElementById("progress").style.width =
-    ((paginaAtual/total)*100)+"%";
-}
-
-async function proximaPagina(){
-  if(pdf && paginaAtual<pdf.numPages){
-    await renderPagina(paginaAtual+1);
-  }
-}
-
-async function paginaAnterior(){
-  if(pdf && paginaAtual>1){
-    await renderPagina(paginaAtual-1);
-  }
-}
-
-function voltarBiblioteca(){
-  salvarEstado("biblioteca");
-  renderToken++;
-  document.getElementById("leitor").style.display="none";
-  document.getElementById("biblioteca").style.display="block";
-  document.getElementById("controls").style.display="none";
-  document.getElementById("progress").style.width="0";
-  window.scrollTo(0,0);
-  // A posição continua salva para quando o usuário abrir o livro novamente.
-}
-
-function toggleCinema(){
-  // Não usa a API de tela cheia do celular. Apenas amplia o leitor dentro da página.
-  document.body.classList.toggle("modo-tela-cheia");
-  const btn=document.querySelector('.reader-top .icon-btn:last-child');
-  if(btn) btn.textContent=document.body.classList.contains("modo-tela-cheia") ? "✕" : "⛶";
-}
-
-window.addEventListener("resize",()=>{
-  if(carregado && document.getElementById("leitor").style.display!=="none"){
-    clearTimeout(window.__resizeTimer);
-    window.__resizeTimer=setTimeout(()=>renderPagina(paginaAtual),250);
-  }
-});
-
-// Mantém a tela em que o usuário estava quando recarregou:
-// - se estava lendo, reabre o livro na última página salva;
-// - se voltou para a biblioteca, continua na biblioteca.
-window.addEventListener("load",()=>{
-  const estado=lerEstado();
-  // Na primeira abertura desta versão, a tela padrão é a Biblioteca.
-  if(!sessionStorage.getItem(VIEW_KEY)){
-    sessionStorage.setItem(VIEW_KEY, estado.view);
-  }
-  if(estado.view==="leitor") abrirLivro();
-  else {
-    document.getElementById("biblioteca").style.display="block";
-    document.getElementById("leitor").style.display="none";
-    document.getElementById("controls").style.display="none";
-  }
-});
-
-// Garante que atualizar/fechar a página preserve exatamente a tela atual.
-function preservarTelaAtual(){
-  const leitorVisivel=document.getElementById("leitor").style.display!=="none";
-  const view=leitorVisivel ? "leitor" : "biblioteca";
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({view:view, pagina:paginaAtual}));
-  sessionStorage.setItem(VIEW_KEY, view);
-}
-window.addEventListener("beforeunload", preservarTelaAtual);
-window.addEventListener("pagehide", preservarTelaAtual);
+function atualizarUI(){const total=pdf?pdf.numPages:63;document.getElementById("pageInfo").textContent=paginaAtual+" / "+total;document.getElementById("progress").style.width=(paginaAtual/total*100)+"%"}
+function proximaPagina(){if(pdf&&paginaAtual<pdf.numPages)renderPagina(paginaAtual+1)}function paginaAnterior(){if(pdf&&paginaAtual>1)renderPagina(paginaAtual-1)}
+function voltarBiblioteca(){salvarEstado("biblioteca");renderToken++;document.getElementById("leitor").style.display="none";document.getElementById("biblioteca").style.display="block";document.getElementById("controls").style.display="none";document.getElementById("progress").style.width="0"}
+function toggleModo(){document.body.classList.toggle("modo")}
+window.addEventListener("load",async()=>{const {data}=await sb.auth.getUser();if(data?.user){currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros()}const e=lerEstado();if(e.view==="leitor")abrirLivro()});
+window.addEventListener("beforeunload",()=>salvarEstado(document.getElementById("leitor").style.display==="none"?"biblioteca":"leitor"));
 </script>
 </body>
 </html>
