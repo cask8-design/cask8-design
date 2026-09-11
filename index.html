@@ -92,7 +92,7 @@ async function abrirAdmin(){
   if(!email)return;
   const senha=prompt("Senha:");
   if(!senha)return;
-  const {data,error}=await sb.auth.signInWithPassword({email,senha});
+  const {data,error}=await sb.auth.signInWithPassword({email,password:senha});
   if(error){alert("Não foi possível entrar: "+error.message);return}
   currentUser=data.user;document.getElementById("adminArea").classList.remove("hidden");document.getElementById("adminEmail").textContent=currentUser.email||"";mostrarLivros();
 }
